@@ -11,6 +11,7 @@ let conversionRate = DEFAULT_INR_TO_NPR;
 let totalBudgetNPR = 0;
 let isEditor = false;
 let unsubscribeExpenses = null;
+let unsubscribeSettings = null;
 
 // ── Categories ────────────────────────────────────────────
 const CATEGORIES = [
@@ -91,8 +92,8 @@ function initFirebase() {
       isEditor = true;
       showBudgetContent();
       renderUserBar();
-      loadSettings();
-      loadExpenses();
+      startSettingsListener();
+      startExpensesListener();
     });
   } catch (e) {
     console.error('Firebase init error:', e);
@@ -109,6 +110,7 @@ function signInGoogle() {
 }
 function signOut() {
   if (unsubscribeExpenses) { unsubscribeExpenses(); unsubscribeExpenses = null; }
+  if (unsubscribeSettings) { unsubscribeSettings(); unsubscribeSettings = null; }
   auth.signOut();
 }
 
@@ -128,23 +130,30 @@ function renderUserBar() {
     </div>`;
 }
 
-// ── Load settings ──────────────────────────────────────────
-async function loadSettings() {
-  try {
-    const doc = await db.collection('settings').doc('main').get();
-    if (doc.exists) {
-      const d = doc.data();
-      totalBudgetNPR = d.totalBudgetNPR || 0;
-      conversionRate = d.conversionRate || DEFAULT_INR_TO_NPR;
-      const rateEl = document.getElementById('rateDisplay');
-      if (rateEl) rateEl.textContent = `1 INR = ${conversionRate.toFixed(2)} NPR`;
-    }
-    renderStats();
-  } catch (e) { console.error('loadSettings error:', e); }
+// ── Real-time settings listener (2-way binding) ────────────
+function startSettingsListener() {
+  if (unsubscribeSettings) { unsubscribeSettings(); }
+  setLiveStatus('connecting');
+  unsubscribeSettings = db.collection('settings').doc('main')
+    .onSnapshot(doc => {
+      if (doc.exists) {
+        const d = doc.data();
+        totalBudgetNPR = d.totalBudgetNPR || 0;
+        conversionRate  = d.conversionRate  || DEFAULT_INR_TO_NPR;
+        const rateEl = document.getElementById('rateDisplay');
+        if (rateEl) rateEl.textContent = `1 INR = ${conversionRate.toFixed(2)} NPR`;
+      }
+      renderStats();
+      setLiveStatus('live');
+    }, err => {
+      console.error('Settings listener error:', err);
+      setLiveStatus('error');
+    });
 }
 
-// ── Load expenses (real-time) ──────────────────────────────
-function loadExpenses() {
+// ── Real-time expenses listener (2-way binding) ────────────
+function startExpensesListener() {
+  if (unsubscribeExpenses) { unsubscribeExpenses(); }
   unsubscribeExpenses = db.collection('expenses')
     .orderBy('date', 'desc')
     .onSnapshot(snap => {
@@ -152,7 +161,26 @@ function loadExpenses() {
       renderStats();
       renderExpenses();
       renderPhaseChart();
-    }, err => console.error('loadExpenses error:', err));
+      setLiveStatus('live');
+    }, err => {
+      console.error('Expenses listener error:', err);
+      setLiveStatus('error');
+    });
+}
+
+// ── Live status dot ────────────────────────────────────────
+function setLiveStatus(state) {
+  const el = document.getElementById('liveStatus');
+  if (!el) return;
+  const cfg = {
+    connecting: { color:'#f59e0b', label:'Connecting...',  anim:false },
+    live:       { color:'#22c55e', label:'Live',            anim:true  },
+    error:      { color:'#ef4444', label:'Offline',         anim:false },
+  }[state] || { color:'#22c55e', label:'Live', anim:true };
+  el.innerHTML = `<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;font-weight:700;color:var(--muted);">
+    <span style="width:7px;height:7px;border-radius:50%;background:${cfg.color};display:inline-block;${cfg.anim?'animation:livePulse 2s ease-in-out infinite;':''}"></span>
+    ${cfg.label}
+  </span>`;
 }
 
 // ── Stats ──────────────────────────────────────────────────
