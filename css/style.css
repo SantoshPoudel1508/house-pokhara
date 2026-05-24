@@ -485,8 +485,17 @@ table:not(.brief-table) thead, table:not(.brief-table) tbody { display: table; w
 .expense-desc { font-weight: 600; font-size: 14px; color: var(--text); }
 .expense-meta { font-size: 12px; color: var(--muted); margin-top: 2px; }
 .expense-amount { font-size: 16px; font-weight: 800; color: var(--accent); flex-shrink: 0; }
-.expense-actions button { background: none; border: none; cursor: pointer; color: var(--muted); padding: 4px 8px; border-radius: 6px; font-size: 14px; transition: all .15s; }
-.expense-actions button:hover { background: var(--red-light); color: var(--red); }
+.expense-actions { display:flex; gap:4px; align-items:center; }
+.expense-actions button {
+  background: none; border: none; cursor: pointer;
+  width: 34px; height: 34px; border-radius: 8px;
+  font-size: 17px; opacity: .40;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .18s ease; flex-shrink: 0;
+}
+.expense-actions button:hover { opacity: 1; transform: scale(1.18); }
+.expense-actions .btn-edit:hover   { background: var(--accent-light); }
+.expense-actions .btn-delete:hover { background: var(--red-light); }
 
 .add-expense-btn { background: var(--accent); color: #fff; border: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .15s; display: inline-flex; align-items: center; gap: 8px; }
 .add-expense-btn:hover { background: var(--accent-dark); }

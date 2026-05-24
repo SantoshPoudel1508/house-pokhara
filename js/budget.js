@@ -272,8 +272,8 @@ function renderExpenses() {
         </div>
         <div class="expense-amount">${sym(viewCurrency)} ${new Intl.NumberFormat('en-IN',{maximumFractionDigits:0}).format(amt)}</div>
         <div class="expense-actions">
-          <button onclick="editExpense('${e.id}')" title="Edit expense" style="color:var(--accent-dark);">✏️</button>
-          <button onclick="deleteExpense('${e.id}')" title="Delete expense">🗑</button>
+          <button class="btn-edit"   onclick="editExpense('${e.id}')"   title="Edit">✏️</button>
+          <button class="btn-delete" onclick="deleteExpense('${e.id}')" title="Delete">🗑</button>
         </div>
       </div>`;
   }).join('');
