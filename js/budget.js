@@ -220,21 +220,26 @@ function renderStats() {
   if (remCard) remCard.className = 'bstat ' + (remaining < 0 ? 'warn-stat' : 'good-stat');
 }
 
-// ── Expense list ───────────────────────────────────────────
+// ── Expense list (scrollable, newest first with count) ─────
 let activeFilter = '';
 function renderExpenses() {
-  const list = document.getElementById('expenseList');
+  const list    = document.getElementById('expenseList');
+  const countEl = document.getElementById('expenseCount');
   if (!list) return;
+
   const items = activeFilter ? expenses.filter(e => e.category === activeFilter) : expenses;
+
+  if (countEl) countEl.textContent = items.length ? `${items.length} expense${items.length !== 1 ? 's' : ''}` : '';
+
   if (!items.length) {
     list.innerHTML = `<div class="empty-state"><div class="es-icon">💸</div><h3>No expenses yet${activeFilter ? ' in this category' : ''}</h3><p>Click "Add Expense" to record your first construction cost.</p></div>`;
     return;
   }
-  list.innerHTML = items.map(e => {
+  list.innerHTML = items.map((e, i) => {
     const cat = catById(e.category);
     const amt = viewCurrency === 'NPR' ? e.amountNPR : toINR(e.amountNPR);
     return `
-      <div class="expense-item">
+      <div class="expense-item" style="${i < 3 ? 'border-left:3px solid var(--accent);' : ''}">
         <div class="expense-cat-dot" style="background:${cat.color}"></div>
         <div class="expense-info">
           <div class="expense-desc">${e.description || 'Expense'}</div>
@@ -248,114 +253,51 @@ function renderExpenses() {
   }).join('');
 }
 
-// ── Category chart (doughnut + scaled bars) ───────────────
-let doughnutChart = null;
-
+// ── Category bars (scaled by value) ──────────────────────
 function renderPhaseChart() {
-  const chartEl  = document.getElementById('phaseChart');
-  const canvas   = document.getElementById('doughnutChart');
-  const legendEl = document.getElementById('chartLegend');
-  if (!chartEl || !canvas) return;
+  const chartEl = document.getElementById('phaseChart');
+  if (!chartEl) return;
 
-  // Calculate totals per category (only non-zero)
   const totals = {};
   expenses.forEach(e => { totals[e.category] = (totals[e.category] || 0) + (e.amountNPR || 0); });
   const active = CATEGORIES.filter(c => (totals[c.id] || 0) > 0);
 
-  if (active.length === 0) {
+  if (!active.length) {
     chartEl.innerHTML = '<p style="color:var(--muted);font-size:13.5px;">Add expenses to see the breakdown.</p>';
-    if (doughnutChart) { doughnutChart.destroy(); doughnutChart = null; }
-    canvas.style.display = 'none';
-    if (legendEl) legendEl.innerHTML = '';
     return;
   }
 
-  canvas.style.display = 'block';
   const totalSpent = active.reduce((s, c) => s + totals[c.id], 0);
-  const labels  = active.map(c => c.label);
-  const data    = active.map(c => totals[c.id]);
-  const colors  = active.map(c => c.color);
+  const maxVal     = Math.max(...active.map(c => totals[c.id]));
 
-  // ── Doughnut chart ──
-  if (doughnutChart) {
-    doughnutChart.data.labels                  = labels;
-    doughnutChart.data.datasets[0].data        = data;
-    doughnutChart.data.datasets[0].backgroundColor = colors;
-    doughnutChart.update('active');
-  } else {
-    doughnutChart = new Chart(canvas, {
-      type: 'doughnut',
-      data: {
-        labels,
-        datasets: [{
-          data, backgroundColor: colors,
-          borderWidth: 2,
-          borderColor: 'var(--card)',
-          hoverOffset: 8,
-        }]
-      },
-      options: {
-        responsive: false,
-        cutout: '68%',
-        plugins: {
-          legend: { display: false },
-          tooltip: {
-            callbacks: {
-              label: ctx => {
-                const val = ctx.raw;
-                const pct = Math.round(val / totalSpent * 100);
-                return ` ${sym(viewCurrency)} ${fmt(val, viewCurrency)}  (${pct}%)`;
-              }
-            }
-          }
-        }
-      }
-    });
-  }
-
-  // ── Custom legend ──
-  if (legendEl) {
-    legendEl.innerHTML = active.map(c => {
-      const pct = Math.round(totals[c.id] / totalSpent * 100);
-      return `<div style="display:flex;align-items:center;gap:7px;margin:5px 0;font-size:12px;">
-        <span style="width:10px;height:10px;border-radius:3px;background:${c.color};flex-shrink:0;"></span>
-        <span style="flex:1;color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.label}</span>
-        <span style="font-weight:700;color:var(--text);font-size:11px;">${pct}%</span>
-      </div>`;
-    }).join('');
-  }
-
-  // ── Horizontal bars (scaled by value — biggest = full width) ──
-  const maxVal = Math.max(...data);
-  chartEl.innerHTML = active.map(c => {
-    const val    = totals[c.id];
-    const pct    = Math.round(val / maxVal * 100);   // relative to max category
-    const share  = Math.round(val / totalSpent * 100); // share of total
-    return `
-      <div style="margin:10px 0;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
-          <span style="font-size:13px;color:var(--text-soft);display:flex;align-items:center;gap:6px;">
-            <span style="width:9px;height:9px;border-radius:2px;background:${c.color};display:inline-block;"></span>
-            ${c.label}
-          </span>
-          <span style="font-size:12.5px;font-weight:700;color:var(--text);">${sym(viewCurrency)} ${fmt(val, viewCurrency)}</span>
-        </div>
-        <div style="background:var(--border);border-radius:20px;height:10px;overflow:hidden;">
-          <div style="
-            width:${pct}%;height:10px;border-radius:20px;
-            background:${c.color};
-            transition:width .6s ease;
-            position:relative;
-          ">
-            <span style="
-              position:absolute;right:6px;top:50%;transform:translateY(-50%);
-              font-size:9px;font-weight:800;color:#fff;white-space:nowrap;
-              display:${pct > 20 ? 'block' : 'none'};
-            ">${share}%</span>
+  chartEl.innerHTML = active
+    .sort((a, b) => totals[b.id] - totals[a.id])  // biggest first
+    .map(c => {
+      const val   = totals[c.id];
+      const barW  = Math.round(val / maxVal * 100);  // scaled to biggest = 100%
+      const share = Math.round(val / totalSpent * 100);
+      const disp  = `${sym(viewCurrency)} ${fmt(val, viewCurrency)}`;
+      return `
+        <div style="margin:14px 0;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+            <span style="font-size:13px;color:var(--text-soft);display:flex;align-items:center;gap:7px;">
+              <span style="width:10px;height:10px;border-radius:3px;background:${c.color};display:inline-block;flex-shrink:0;"></span>
+              ${c.label}
+            </span>
+            <span style="font-size:13px;font-weight:700;color:var(--text);">${disp} <span style="font-size:11px;font-weight:600;color:var(--muted);">(${share}%)</span></span>
           </div>
-        </div>
-      </div>`;
-  }).join('');
+          <div style="background:var(--border);border-radius:20px;height:12px;overflow:hidden;">
+            <div style="
+              width:${barW}%;
+              height:12px;
+              border-radius:20px;
+              background:${c.color};
+              transition:width .7s cubic-bezier(.4,0,.2,1);
+              min-width:${val > 0 ? '6px' : '0'};
+            "></div>
+          </div>
+        </div>`;
+    }).join('');
 }
 
 // ── Currency toggle ────────────────────────────────────────
@@ -366,8 +308,6 @@ function setCurrency(cur) {
   );
   renderStats();
   renderExpenses();
-  // Destroy chart so it rebuilds with new currency amounts in tooltips
-  if (doughnutChart) { doughnutChart.destroy(); doughnutChart = null; }
   renderPhaseChart();
 }
 
