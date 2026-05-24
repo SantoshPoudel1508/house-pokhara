@@ -73,6 +73,52 @@
     <span style="background:rgba(255,255,255,.15);padding:5px 12px;border-radius:6px;font-size:12px;">📐 1,800 sq ft</span>
   </div>
 </div>
+<!-- ── Budget Quick-Access Card ── -->
+<a href="budget.html" style="text-decoration:none;display:block;margin:16px 0;">
+  <div style="
+    background: linear-gradient(135deg, var(--primary) 0%, var(--accent-dark) 100%);
+    border-radius: 14px;
+    padding: 22px 26px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: var(--shadow-md);
+    transition: transform .2s, box-shadow .2s;
+    position: relative;
+    overflow: hidden;
+  " onmouseover="this.style.transform='translateY(-2px)';this.style.boxShadow='var(--shadow-lg)'"
+     onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='var(--shadow-md)'">
+    <!-- Background decoration -->
+    <div style="position:absolute;right:-10px;top:-10px;font-size:90px;opacity:.08;line-height:1;">💰</div>
+    <!-- Icon -->
+    <div style="
+      background: rgba(255,255,255,.15);
+      border: 1.5px solid rgba(255,255,255,.2);
+      border-radius: 14px;
+      width: 58px; height: 58px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 28px; flex-shrink: 0;
+    ">💰</div>
+    <!-- Text -->
+    <div style="flex:1;min-width:0;">
+      <div style="font-size:11px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:rgba(255,255,255,.6);margin-bottom:4px;">Private · Login Required</div>
+      <div style="font-size:18px;font-weight:800;color:#fff;letter-spacing:-.02em;">Budget &amp; Expense Tracker</div>
+      <div style="font-size:13px;color:rgba(255,255,255,.7);margin-top:3px;">Track all construction costs in NPR or INR — synced across all devices</div>
+    </div>
+    <!-- Arrow -->
+    <div style="
+      background: var(--accent);
+      color: #fff;
+      padding: 10px 18px;
+      border-radius: 9px;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+      flex-shrink: 0;
+    ">Open →</div>
+  </div>
+</a>
+
 <h4>Progress Dashboard — Click Any Phase to Open</h4>
 <div class="progress-card">
   <div class="pc-icon">📋</div>
