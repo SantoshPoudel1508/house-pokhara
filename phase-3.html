@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Phase 3 — Plumbing | House Guide — Pokhara 30×60</title>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="phase-3">
+<div class="topbar">
+  <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+  <span class="site-name">🏡 House Guide — Pokhara</span>
+  <div class="progress-wrap">
+    <div class="bar-bg"><div class="bar-fill" id="progressBar" style="width:0%"></div></div>
+    <span class="bar-text" id="progressText">0 of 0 done</span>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨 Print</button>
+  <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+</div>
+<div class="sidebar-overlay"></div>
+<div class="sidebar" id="sidebar">
+  <div class="nav-section">Overview</div>
+  <a href="index.html" class=""><span class="nav-icon">🏡</span><span class="nav-label">Home</span><span class="nav-check"></span></a>
+  <div class="divider"></div>
+  <div class="nav-section">Construction Phases</div>
+  <a href="phase-0.html" class="" data-page="phase-0"><span class="nav-icon">📋</span><span class="nav-label">Phase 0 — Planning</span><span class="nav-check"></span></a>
+  <a href="phase-1.html" class="" data-page="phase-1"><span class="nav-icon">🏗️</span><span class="nav-label">Phase 1 — Foundation</span><span class="nav-check"></span></a>
+  <a href="phase-2.html" class="" data-page="phase-2"><span class="nav-icon">🧱</span><span class="nav-label">Phase 2 — Structure</span><span class="nav-check"></span></a>
+  <a href="phase-3.html" class="active" data-page="phase-3"><span class="nav-icon">💧</span><span class="nav-label">Phase 3 — Plumbing</span><span class="nav-check"></span></a>
+  <a href="phase-4.html" class="" data-page="phase-4"><span class="nav-icon">⚡</span><span class="nav-label">Phase 4 — Electrical</span><span class="nav-check"></span></a>
+  <a href="phase-5.html" class="" data-page="phase-5"><span class="nav-icon">🛡️</span><span class="nav-label">Phase 5 — Waterproofing</span><span class="nav-check"></span></a>
+  <a href="phase-6.html" class="" data-page="phase-6"><span class="nav-icon">🪟</span><span class="nav-label">Phase 6 — Windows & Doors</span><span class="nav-check"></span></a>
+  <a href="phase-7.html" class="" data-page="phase-7"><span class="nav-icon">🔲</span><span class="nav-label">Phase 7 — Flooring</span><span class="nav-check"></span></a>
+  <a href="phase-8.html" class="" data-page="phase-8"><span class="nav-icon">🎨</span><span class="nav-label">Phase 8 — Paint</span><span class="nav-check"></span></a>
+  <a href="phase-9.html" class="" data-page="phase-9"><span class="nav-icon">🍳</span><span class="nav-label">Phase 9 — Kitchen</span><span class="nav-check"></span></a>
+  <a href="phase-10.html" class="" data-page="phase-10"><span class="nav-icon">🚿</span><span class="nav-label">Phase 10 — Bathrooms</span><span class="nav-check"></span></a>
+  <a href="phase-11.html" class="" data-page="phase-11"><span class="nav-icon">🛋️</span><span class="nav-label">Phase 11 — Interiors</span><span class="nav-check"></span></a>
+  <a href="phase-12.html" class="" data-page="phase-12"><span class="nav-icon">🌿</span><span class="nav-label">Phase 12 — Outdoor</span><span class="nav-check"></span></a>
+  <div class="divider"></div>
+  <div class="nav-section">Reference</div>
+  <a href="scams.html" class="" data-page="scams"><span class="nav-icon">🚫</span><span class="nav-label">Scam Guard</span><span class="nav-check"></span></a>
+  <a href="questions.html" class="" data-page="questions"><span class="nav-icon">❓</span><span class="nav-label">Questions Guide</span><span class="nav-check"></span></a>
+  <a href="briefs.html" class="" data-page="briefs"><span class="nav-icon">📄</span><span class="nav-label">Professional Briefs</span><span class="nav-check"></span></a>
+  <div class="divider"></div>
+</div>
+
+<main class="main">
+  <div class="page-header">
+    <div class="phase-tag">Phase 3</div>
+    <h1>Phase 3 — Plumbing</h1>
+    <div class="subtitle">All pipes inside walls before plastering. Design before walls close.</div>
+    <div class="nav-btns">
+      <a class="nav-btn" href="phase-2.html">&larr; ← Phase 2</a>
+      <a class="nav-btn next" href="phase-4.html">Phase 4: Electrical → &rarr;</a>
+    </div>
+  </div>
+<div class="sec" id="s-ptrap">
+<div class="sec-head" onclick="toggle('s-ptrap')">
+  <div class="sec-icon">🔍</div>
+  <div class="sec-title"><h3>P-Trap — What It Is and Why Every Drain Needs One</h3><p>The water seal that stops sewer smell entering your rooms</p></div>
+  <div class="sec-badge">Must Know</div>
+  <span class="sec-arrow">▼</span>
+</div>
+<div class="sec-body">
+
+<div class="diagram">
+  <svg viewBox="0 0 380 200" width="380" height="200">
+    <text x="190" y="15" text-anchor="middle" font-size="13" font-weight="bold" fill="#1a3c5e">P-TRAP — Water Seal Under Every Drain</text>
+    <rect x="145" y="24" width="90" height="28" rx="5" fill="#d1d5db" stroke="#6b7280" stroke-width="1.5"/>
+    <text x="190" y="42" text-anchor="middle" font-size="11" fill="#374151">Drain Hole (basin/floor)</text>
+    <rect x="178" y="52" width="24" height="22" fill="#9ca3af"/>
+    <path d="M178 74 Q158 74 158 94 Q158 114 178 114" fill="none" stroke="#9ca3af" stroke-width="20" stroke-linecap="round"/>
+    <path d="M202 74 Q222 74 222 94 Q222 114 202 114" fill="none" stroke="#9ca3af" stroke-width="20" stroke-linecap="round"/>
+    <path d="M176 102 Q158 102 158 94 Q158 114 176 114" fill="#60a5fa" opacity=".75"/>
+    <path d="M204 102 Q222 102 222 94 Q222 114 204 114" fill="#60a5fa" opacity=".75"/>
+    <rect x="176" y="102" width="28" height="12" fill="#60a5fa" opacity=".75"/>
+    <text x="190" y="111" text-anchor="middle" font-size="9" fill="white" font-weight="bold">WATER</text>
+    <rect x="178" y="114" width="24" height="50" fill="#9ca3af"/>
+    <text x="275" y="94" font-size="11" fill="#b83232" font-weight="bold">Sewer Gas ↓</text>
+    <line x1="269" y1="98" x2="228" y2="110" stroke="#b83232" stroke-width="1.5" stroke-dasharray="4,3"/>
+    <text x="275" y="112" font-size="10" fill="#059669">Water blocks it!</text>
+    <text x="190" y="178" text-anchor="middle" font-size="10" fill="#6b7280">→ To sewer / municipal drain</text>
+  </svg>
+  <div class="caption">The U-shaped bend always holds water. This water acts as a seal that stops bad-smelling and harmful sewer gas from coming back up through the drain into the room.</div>
+</div>
+<div class="explain"><strong>P-Trap Simply Explained</strong>Imagine a straw bent into a U-shape at the bottom. Water stays in the bend. If you blow air from below, the water blocks it. A P-trap does the same thing — the water seal stops sewer gas from entering your bathroom.<br/><br/>
+✅ Every floor drain, wash basin drain, and kitchen sink drain MUST have a P-trap.<br/>
+✅ If a bathroom is not used for weeks, pour water down each drain to refill the trap.<br/>
+❌ Without P-trap: your bathroom will smell like sewer even when everything else is clean.</div>
+
+</div>
+</div><div class="sec" id="s-system">
+<div class="sec-head" onclick="toggle('s-system')">
+  <div class="sec-icon">💧</div>
+  <div class="sec-title"><h3>Complete Plumbing System — Hot, Cold, Tanks, Rules</h3><p>Every pipe, every fitting, tank placement</p></div>
+  <div class="sec-badge">Full Detail</div>
+  <span class="sec-arrow">▼</span>
+</div>
+<div class="sec-body">
+
+<div class="tip-box"><strong>Water Tank Placement</strong><br/>
+<strong>Underground Sump Tank: REAR of house.</strong> You already have a water passage at the rear — connect here. Keeps front clean and visible.<br/>
+<strong>Overhead Tank: CENTRE or REAR of roof.</strong> Central position gives equal pressure to all bathrooms.<br/>
+<strong>Sewage: REAR.</strong> Connect all drains to the rear passage drainage system. Keep the front completely clean — no tanks or pipes visible from road.</div>
+<h4>Hot Water System Options</h4>
+<table>
+<tr><th>System</th><th>How It Works</th><th>Good Things</th><th>Not So Good</th><th>Recommendation</th></tr>
+<tr><td><strong>Solar Water Heater</strong></td><td>Panels on roof heat water using sunlight. Stored in insulated tank.</td><td>Free hot water on sunny days (most days in Pokhara). Pays back in 3–4 years.</td><td>Needs roof space. Needs backup on cloudy days.</td><td class="good">✅ Use as main hot water system</td></tr>
+<tr><td><strong>Electric Geyser</strong><br/>(per bathroom)</td><td>Electric element heats water in a 25-litre tank in each bathroom.</td><td>Simple, works always, easy to replace</td><td>Electricity cost. Takes 15–20 min to heat.</td><td class="good">✅ Use as backup in each bathroom</td></tr>
+</table>
+<h4>Pipe Materials — What Must Be Used</h4>
+<table>
+<tr><th>Use</th><th>Required Material</th><th>Why</th><th>Not Acceptable</th></tr>
+<tr><td>Cold water supply</td><td>CPVC or uPVC — branded (Ashirvad, Supreme)</td><td>Pressure-rated, food-safe, long life</td><td>Unknown local brand</td></tr>
+<tr><td>Hot water supply</td><td>CPVC only — must say "CPVC" on pipe</td><td>Only CPVC handles hot water without warping</td><td>Regular uPVC for hot lines — will warp and leak</td></tr>
+<tr><td>Drain pipes inside</td><td>SWR PVC — heavy gauge, branded</td><td>Thick walls, proper diameter (100mm for toilet)</td><td>Thin regular PVC</td></tr>
+<tr><td>Underground drain</td><td>HDPE (black heavy-duty pipe)</td><td>Does not break when soil shifts over time</td><td>Thin PVC underground</td></tr>
+</table>
+<h4>Important Rules for Every Plumber</h4>
+<ul>
+  <li><strong>P-trap at every drain:</strong> Every floor drain, basin, kitchen sink — no exceptions</li>
+  <li><strong>Service zones:</strong> All bathrooms stacked vertically on every floor (same position)</li>
+  <li><strong>Stopcock (shut-off tap) at every bathroom branch</strong> — so one bathroom can be shut off without affecting the whole house</li>
+  <li><strong>Drain slope:</strong> All drain pipes must slope at 1 cm per meter toward drain — test with water before closing walls</li>
+  <li><strong>Hot water pipe insulation:</strong> Wrap all hot water pipes with foam sleeve to reduce heat loss</li>
+  <li><strong>AC drain pipe:</strong> Each AC unit must have a dedicated drain pipe — not left to drip down the wall</li>
+</ul>
+<div class="cl-item" id="cl-p1"><input type="checkbox" onchange="markDone(this,'cl-p1')"><label>Complete plumbing layout drawing done before any pipe laid</label></div>
+
+<div class="cl-item" id="cl-p2"><input type="checkbox" onchange="markDone(this,'cl-p2')"><label>All bathrooms stacked vertically (service zones confirmed in design)</label></div>
+
+<div class="cl-item" id="cl-p3"><input type="checkbox" onchange="markDone(this,'cl-p3')"><label>CPVC pipes used for ALL hot water lines (not regular uPVC)</label></div>
+
+<div class="cl-item" id="cl-p4"><input type="checkbox" onchange="markDone(this,'cl-p4')"><label>P-trap installed under every floor drain, basin drain, and kitchen sink drain</label></div>
+
+<div class="cl-item" id="cl-p5"><input type="checkbox" onchange="markDone(this,'cl-p5')"><label>Stopcock valve at every bathroom branch line</label></div>
+
+<div class="cl-item" id="cl-p6"><input type="checkbox" onchange="markDone(this,'cl-p6')"><label>Supply pipes pressure-tested before plastering walls</label></div>
+
+<div class="cl-item" id="cl-p7"><input type="checkbox" onchange="markDone(this,'cl-p7')"><label>Drain pipes flow-tested with water before plastering walls</label></div>
+
+<div class="cl-item" id="cl-p8"><input type="checkbox" onchange="markDone(this,'cl-p8')"><label>Underground sump tank placed at rear of house</label></div>
+
+<div class="cl-item" id="cl-p9"><input type="checkbox" onchange="markDone(this,'cl-p9')"><label>Solar water heater pipe provision on roof made during structure stage</label></div>
+
+<div class="comment-area">
+  <label>💬 Notes / Comments (auto-saved)</label>
+  <textarea id="comment-plumbing" placeholder="Write your notes here..." oninput="saveComment('plumbing',this.value)"></textarea>
+  <div class="saved-tag" id="saved_plumbing">✓ Saved</div>
+</div>
+
+</div>
+</div>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>

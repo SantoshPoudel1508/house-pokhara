@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Phase 2 — Structure | House Guide — Pokhara 30×60</title>
+<link rel="stylesheet" href="css/style.css"/>
+</head>
+<body data-page="phase-2">
+<div class="topbar">
+  <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+  <span class="site-name">🏡 House Guide — Pokhara</span>
+  <div class="progress-wrap">
+    <div class="bar-bg"><div class="bar-fill" id="progressBar" style="width:0%"></div></div>
+    <span class="bar-text" id="progressText">0 of 0 done</span>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨 Print</button>
+  <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+</div>
+<div class="sidebar-overlay"></div>
+<div class="sidebar" id="sidebar">
+  <div class="nav-section">Overview</div>
+  <a href="index.html" class=""><span class="nav-icon">🏡</span><span class="nav-label">Home</span><span class="nav-check"></span></a>
+  <div class="divider"></div>
+  <div class="nav-section">Construction Phases</div>
+  <a href="phase-0.html" class="" data-page="phase-0"><span class="nav-icon">📋</span><span class="nav-label">Phase 0 — Planning</span><span class="nav-check"></span></a>
+  <a href="phase-1.html" class="" data-page="phase-1"><span class="nav-icon">🏗️</span><span class="nav-label">Phase 1 — Foundation</span><span class="nav-check"></span></a>
+  <a href="phase-2.html" class="active" data-page="phase-2"><span class="nav-icon">🧱</span><span class="nav-label">Phase 2 — Structure</span><span class="nav-check"></span></a>
+  <a href="phase-3.html" class="" data-page="phase-3"><span class="nav-icon">💧</span><span class="nav-label">Phase 3 — Plumbing</span><span class="nav-check"></span></a>
+  <a href="phase-4.html" class="" data-page="phase-4"><span class="nav-icon">⚡</span><span class="nav-label">Phase 4 — Electrical</span><span class="nav-check"></span></a>
+  <a href="phase-5.html" class="" data-page="phase-5"><span class="nav-icon">🛡️</span><span class="nav-label">Phase 5 — Waterproofing</span><span class="nav-check"></span></a>
+  <a href="phase-6.html" class="" data-page="phase-6"><span class="nav-icon">🪟</span><span class="nav-label">Phase 6 — Windows & Doors</span><span class="nav-check"></span></a>
+  <a href="phase-7.html" class="" data-page="phase-7"><span class="nav-icon">🔲</span><span class="nav-label">Phase 7 — Flooring</span><span class="nav-check"></span></a>
+  <a href="phase-8.html" class="" data-page="phase-8"><span class="nav-icon">🎨</span><span class="nav-label">Phase 8 — Paint</span><span class="nav-check"></span></a>
+  <a href="phase-9.html" class="" data-page="phase-9"><span class="nav-icon">🍳</span><span class="nav-label">Phase 9 — Kitchen</span><span class="nav-check"></span></a>
+  <a href="phase-10.html" class="" data-page="phase-10"><span class="nav-icon">🚿</span><span class="nav-label">Phase 10 — Bathrooms</span><span class="nav-check"></span></a>
+  <a href="phase-11.html" class="" data-page="phase-11"><span class="nav-icon">🛋️</span><span class="nav-label">Phase 11 — Interiors</span><span class="nav-check"></span></a>
+  <a href="phase-12.html" class="" data-page="phase-12"><span class="nav-icon">🌿</span><span class="nav-label">Phase 12 — Outdoor</span><span class="nav-check"></span></a>
+  <div class="divider"></div>
+  <div class="nav-section">Reference</div>
+  <a href="scams.html" class="" data-page="scams"><span class="nav-icon">🚫</span><span class="nav-label">Scam Guard</span><span class="nav-check"></span></a>
+  <a href="questions.html" class="" data-page="questions"><span class="nav-icon">❓</span><span class="nav-label">Questions Guide</span><span class="nav-check"></span></a>
+  <a href="briefs.html" class="" data-page="briefs"><span class="nav-icon">📄</span><span class="nav-label">Professional Briefs</span><span class="nav-check"></span></a>
+  <div class="divider"></div>
+</div>
+
+<main class="main">
+  <div class="page-header">
+    <div class="phase-tag">Phase 2</div>
+    <h1>Phase 2 — Structure</h1>
+    <div class="subtitle">The structural skeleton determines earthquake safety for the next 100 years.</div>
+    <div class="nav-btns">
+      <a class="nav-btn" href="phase-1.html">&larr; ← Phase 1</a>
+      <a class="nav-btn next" href="phase-3.html">Phase 3: Plumbing → &rarr;</a>
+    </div>
+  </div>
+<div class="sec" id="s-str">
+<div class="sec-head" onclick="toggle('s-str')">
+  <div class="sec-icon">🏛️</div>
+  <div class="sec-title"><h3>Columns, Beams, Walls — Building the Skeleton</h3><p>Steel and concrete frame. Most important for earthquake safety.</p></div>
+  <div class="sec-badge">Read Carefully</div>
+  <span class="sec-arrow">▼</span>
+</div>
+<div class="sec-body">
+
+<div class="explain"><strong>No Sharp Edges on Wall Corners — Mandatory Everywhere</strong>All columns and wall corners must have their sharp edges rounded during plastering. This is called a "bullnose corner." Ask your mason: "Use bullnose corner bead on every single internal corner." Cost: almost zero. Benefit: if a child or adult bumps into the corner, they do not get a sharp cut.</div>
+<h4>Wall Block Material — Which One to Use</h4>
+<table>
+<tr><th>Material</th><th>What It Is</th><th>Good Things</th><th>Bad Things</th><th>Verdict</th></tr>
+<tr><td><strong>AAC Block</strong><br/>(Aerated Autoclaved Concrete)</td><td>Light grey block with tiny air bubbles inside. Like a very strong sponge made of concrete.</td><td>30% lighter than clay brick → less load on columns during earthquake. Keeps house cooler in summer. Better sound insulation. Uniform size = straighter walls.</td><td>Needs skill to lay properly. Slightly more costly. Needs special AAC mortar (not normal cement mortar).</td><td class="good">✅ Highly Recommended</td></tr>
+<tr><td><strong>Red Clay Brick</strong></td><td>Traditional fired clay brick</td><td>Widely available, familiar to masons</td><td>Heavier (more earthquake load). Poor insulation. Irregular sizes.</td><td class="note">Acceptable if budget is tight</td></tr>
+<tr><td><strong>Hollow Concrete Block</strong></td><td>Block with hollow spaces inside</td><td>Cheap, fast</td><td>Poor insulation, lower strength for main walls</td><td class="bad">❌ Not for main walls</td></tr>
+</table>
+<h4>Dust Control During Construction</h4>
+<div class="tip-box"><strong>Construction Creates Enormous Dust</strong>Cutting bricks, mixing cement, grinding — all produce fine dust that settles everywhere and is very hard to clean from finished surfaces.<br/>
+✅ Insist contractor uses wet cutting methods (blade with water) for tiles and blocks<br/>
+✅ Cover all finished surfaces and windows with plastic sheets while work continues nearby<br/>
+✅ After all construction, do a full wet cleaning before painting starts<br/>
+✅ Window and door frame channels must be covered with tape during rough work to prevent dust jamming them</div>
+<div class="cl-item" id="cl-str1"><input type="checkbox" onchange="markDone(this,'cl-str1')"><label>Column placement is symmetric as per structural drawing</label></div>
+
+<div class="cl-item" id="cl-str2"><input type="checkbox" onchange="markDone(this,'cl-str2')"><label>Concrete grade M25 confirmed for all columns and beams</label></div>
+
+<div class="cl-item" id="cl-str3"><input type="checkbox" onchange="markDone(this,'cl-str3')"><label>Plinth beam present at ground level all around the perimeter</label></div>
+
+<div class="cl-item" id="cl-str4"><input type="checkbox" onchange="markDone(this,'cl-str4')"><label>Lintel beam (small beam above every door and window opening) present</label></div>
+
+<div class="cl-item" id="cl-str5"><input type="checkbox" onchange="markDone(this,'cl-str5')"><label>All wall corners rounded (bullnose bead) during plastering — no sharp corners anywhere</label></div>
+
+<div class="cl-item" id="cl-str6"><input type="checkbox" onchange="markDone(this,'cl-str6')"><label>Steel checked by structural engineer before every concrete pour</label></div>
+
+<div class="comment-area">
+  <label>💬 Notes / Comments (auto-saved)</label>
+  <textarea id="comment-structure" placeholder="Write your notes here..." oninput="saveComment('structure',this.value)"></textarea>
+  <div class="saved-tag" id="saved_structure">✓ Saved</div>
+</div>
+
+</div>
+</div>
+</main>
+<script src="js/app.js"></script>
+</body>
+</html>
