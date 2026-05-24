@@ -5,612 +5,692 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Professional Briefs | House Guide — Pokhara 30×60</title>
 <link rel="stylesheet" href="css/style.css"/>
+<style>
+  /* Brief-specific styles */
+  .briefs-intro {
+    background: var(--primary);
+    color: #fff;
+    border-radius: var(--radius-lg);
+    padding: 28px 28px 24px;
+    margin-bottom: 10px;
+    position: relative;
+    overflow: hidden;
+  }
+  .briefs-intro::before {
+    content: '📋';
+    position: absolute;
+    right: 20px; top: 50%;
+    transform: translateY(-50%);
+    font-size: 80px;
+    opacity: .08;
+  }
+  .briefs-intro h2 { font-size: 22px; font-weight: 800; color: #fff; margin-bottom: 6px; letter-spacing: -.02em; }
+  .briefs-intro h2::before { display:none; }
+  .briefs-intro p  { font-size: 14px; color: rgba(255,255,255,.75); margin: 0; }
+  .briefs-intro .print-all-btn {
+    display: inline-block; margin-top: 16px;
+    background: var(--accent); color: #fff;
+    padding: 10px 22px; border-radius: 8px;
+    font-size: 13px; font-weight: 700;
+    text-decoration: none; border: none; cursor: pointer;
+  }
+  .briefs-intro .print-all-btn:hover { background: var(--accent-dark); }
+
+  /* Brief nav pills */
+  .brief-pills {
+    display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0;
+  }
+  .brief-pill {
+    padding: 6px 14px; border-radius: 20px; font-size: 12.5px; font-weight: 600;
+    background: var(--card); border: 1.5px solid var(--border); color: var(--text-soft);
+    cursor: pointer; text-decoration: none; transition: all .15s;
+  }
+  .brief-pill:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
+
+  /* Brief card structure */
+  .brief {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    margin: 22px 0;
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    scroll-margin-top: 80px;
+  }
+  .brief-header {
+    padding: 22px 26px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+  .brief-icon {
+    font-size: 30px;
+    flex-shrink: 0;
+    width: 56px; height: 56px;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(255,255,255,.18);
+    border-radius: 14px;
+    border: 1.5px solid rgba(255,255,255,.2);
+  }
+  .brief-info { flex: 1; min-width: 0; }
+  .brief-info .brief-role {
+    font-size: 10px; font-weight: 800; letter-spacing: 1.5px;
+    text-transform: uppercase; color: rgba(255,255,255,.6);
+    margin-bottom: 4px;
+  }
+  .brief-info h2 {
+    font-size: 18px; font-weight: 800; color: #fff;
+    letter-spacing: -.02em; margin: 0; line-height: 1.2;
+  }
+  .brief-info h2::before { display: none; }
+  .brief-info p {
+    font-size: 13px; color: rgba(255,255,255,.72); margin: 4px 0 0;
+  }
+  .brief-body { padding: 24px 26px; }
+
+  /* Gradient colors per brief */
+  .bh-soil     { background: linear-gradient(135deg, #2D5A3D, #1A3A28); }
+  .bh-struct   { background: linear-gradient(135deg, #1E1A16, #3A2E24); }
+  .bh-arch     { background: linear-gradient(135deg, #1A2A40, #2A3A52); }
+  .bh-cont     { background: linear-gradient(135deg, #3A2010, #5A3018); }
+  .bh-plumb    { background: linear-gradient(135deg, #1A3050, #2A4870); }
+  .bh-elec     { background: linear-gradient(135deg, #302010, #504030); }
+  .bh-water    { background: linear-gradient(135deg, #1E3040, #2E4858); }
+  .bh-tile     { background: linear-gradient(135deg, #38301A, #584A28); }
+  .bh-paint    { background: linear-gradient(135deg, #2A1A30, #402850); }
+  .bh-kitchen  { background: linear-gradient(135deg, var(--accent-dark), #7A4010); }
+  .bh-window   { background: linear-gradient(135deg, #1A3A28, #2A5038); }
+
+  /* Requirement list */
+  .req-list { list-style: none; padding: 0; margin: 10px 0; }
+  .req-list li {
+    display: flex; gap: 10px; align-items: flex-start;
+    padding: 9px 0; border-bottom: 1px solid var(--border);
+    font-size: 13.5px; color: var(--text-soft);
+  }
+  .req-list li:last-child { border-bottom: none; }
+  .req-list li::before { content: '→'; color: var(--accent); font-weight: 800; flex-shrink: 0; margin-top: 1px; }
+
+  /* Red warning in briefs */
+  .brief-warn {
+    background: var(--red-light); border: 1px solid var(--red-border);
+    border-left: 4px solid var(--red); border-radius: 0 8px 8px 0;
+    padding: 12px 16px; margin: 14px 0; font-size: 13.5px; color: var(--text-soft);
+  }
+  .brief-warn strong { color: var(--red); }
+
+  /* Sign block */
+  .sign-block { background: var(--bg-alt); border: 1.5px dashed var(--border); border-radius: 10px; padding: 18px; margin-top: 20px; }
+  .sign-row { display: flex; gap: 20px; flex-wrap: wrap; margin-top: 12px; }
+  .sign-field { flex: 1; min-width: 140px; }
+  .sign-field label { font-size: 10px; text-transform: uppercase; letter-spacing: .5px; color: var(--muted); display: block; margin-bottom: 5px; }
+  .sign-field .line { border-bottom: 1.5px solid var(--border); height: 28px; }
+
+  /* Mini table in briefs */
+  .brief-table { width: 100%; border-collapse: collapse; margin: 12px 0; font-size: 13px; border-radius: 8px; overflow: hidden; }
+  .brief-table th { background: var(--th-bg); color: #fff; padding: 8px 12px; text-align: left; font-size: 11.5px; font-weight: 700; }
+  .brief-table td { padding: 9px 12px; border-bottom: 1px solid var(--border); vertical-align: top; color: var(--text-soft); background: var(--card); }
+  .brief-table tr:nth-child(even) td { background: var(--border-soft); }
+  .brief-table tr:last-child td { border-bottom: none; }
+</style>
 </head>
 <body data-page="briefs">
+
 <div class="topbar">
   <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
-  <span class="site-name">🏡 House Guide — Pokhara</span>
+  <span class="site-name">🏡 <span class="hl">House Guide</span> — Pokhara</span>
   <div class="progress-wrap">
     <div class="bar-bg"><div class="bar-fill" id="progressBar" style="width:0%"></div></div>
-    <span class="bar-text" id="progressText">0 of 0 done</span>
+    <span class="bar-text" id="progressText">0 of 0</span>
   </div>
   <button class="print-btn" onclick="window.print()">🖨 Print</button>
   <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
 </div>
+
 <div class="sidebar-overlay"></div>
+
 <div class="sidebar" id="sidebar">
   <div class="nav-section">Overview</div>
   <a href="index.html" class=""><span class="nav-icon">🏡</span><span class="nav-label">Home</span><span class="nav-check"></span></a>
   <div class="divider"></div>
   <div class="nav-section">Construction Phases</div>
-  <a href="phase-0.html" class="" data-page="phase-0"><span class="nav-icon">📋</span><span class="nav-label">Phase 0 — Planning</span><span class="nav-check"></span></a>
-  <a href="phase-1.html" class="" data-page="phase-1"><span class="nav-icon">🏗️</span><span class="nav-label">Phase 1 — Foundation</span><span class="nav-check"></span></a>
-  <a href="phase-2.html" class="" data-page="phase-2"><span class="nav-icon">🧱</span><span class="nav-label">Phase 2 — Structure</span><span class="nav-check"></span></a>
-  <a href="phase-3.html" class="" data-page="phase-3"><span class="nav-icon">💧</span><span class="nav-label">Phase 3 — Plumbing</span><span class="nav-check"></span></a>
-  <a href="phase-4.html" class="" data-page="phase-4"><span class="nav-icon">⚡</span><span class="nav-label">Phase 4 — Electrical</span><span class="nav-check"></span></a>
-  <a href="phase-5.html" class="" data-page="phase-5"><span class="nav-icon">🛡️</span><span class="nav-label">Phase 5 — Waterproofing</span><span class="nav-check"></span></a>
-  <a href="phase-6.html" class="" data-page="phase-6"><span class="nav-icon">🪟</span><span class="nav-label">Phase 6 — Windows & Doors</span><span class="nav-check"></span></a>
-  <a href="phase-7.html" class="" data-page="phase-7"><span class="nav-icon">🔲</span><span class="nav-label">Phase 7 — Flooring</span><span class="nav-check"></span></a>
-  <a href="phase-8.html" class="" data-page="phase-8"><span class="nav-icon">🎨</span><span class="nav-label">Phase 8 — Paint</span><span class="nav-check"></span></a>
-  <a href="phase-9.html" class="" data-page="phase-9"><span class="nav-icon">🍳</span><span class="nav-label">Phase 9 — Kitchen</span><span class="nav-check"></span></a>
-  <a href="phase-10.html" class="" data-page="phase-10"><span class="nav-icon">🚿</span><span class="nav-label">Phase 10 — Bathrooms</span><span class="nav-check"></span></a>
-  <a href="phase-11.html" class="" data-page="phase-11"><span class="nav-icon">🛋️</span><span class="nav-label">Phase 11 — Interiors</span><span class="nav-check"></span></a>
-  <a href="phase-12.html" class="" data-page="phase-12"><span class="nav-icon">🌿</span><span class="nav-label">Phase 12 — Outdoor</span><span class="nav-check"></span></a>
+  <a href="phase-0.html"  data-page="phase-0" ><span class="nav-icon">📋</span><span class="nav-label">Phase 0 — Planning</span><span class="nav-check"></span></a>
+  <a href="phase-1.html"  data-page="phase-1" ><span class="nav-icon">🏗️</span><span class="nav-label">Phase 1 — Foundation</span><span class="nav-check"></span></a>
+  <a href="phase-2.html"  data-page="phase-2" ><span class="nav-icon">🧱</span><span class="nav-label">Phase 2 — Structure</span><span class="nav-check"></span></a>
+  <a href="phase-3.html"  data-page="phase-3" ><span class="nav-icon">💧</span><span class="nav-label">Phase 3 — Plumbing</span><span class="nav-check"></span></a>
+  <a href="phase-4.html"  data-page="phase-4" ><span class="nav-icon">⚡</span><span class="nav-label">Phase 4 — Electrical</span><span class="nav-check"></span></a>
+  <a href="phase-5.html"  data-page="phase-5" ><span class="nav-icon">🛡️</span><span class="nav-label">Phase 5 — Waterproofing</span><span class="nav-check"></span></a>
+  <a href="phase-6.html"  data-page="phase-6" ><span class="nav-icon">🪟</span><span class="nav-label">Phase 6 — Windows</span><span class="nav-check"></span></a>
+  <a href="phase-7.html"  data-page="phase-7" ><span class="nav-icon">🔲</span><span class="nav-label">Phase 7 — Flooring</span><span class="nav-check"></span></a>
+  <a href="phase-8.html"  data-page="phase-8" ><span class="nav-icon">🎨</span><span class="nav-label">Phase 8 — Paint</span><span class="nav-check"></span></a>
+  <a href="phase-9.html"  data-page="phase-9" ><span class="nav-icon">🍳</span><span class="nav-label">Phase 9 — Kitchen</span><span class="nav-check"></span></a>
+  <a href="phase-10.html" data-page="phase-10"><span class="nav-icon">🚿</span><span class="nav-label">Phase 10 — Bathrooms</span><span class="nav-check"></span></a>
+  <a href="phase-11.html" data-page="phase-11"><span class="nav-icon">🛋️</span><span class="nav-label">Phase 11 — Interiors</span><span class="nav-check"></span></a>
+  <a href="phase-12.html" data-page="phase-12"><span class="nav-icon">🌿</span><span class="nav-label">Phase 12 — Outdoor</span><span class="nav-check"></span></a>
   <div class="divider"></div>
   <div class="nav-section">Reference</div>
-  <a href="scams.html" class="" data-page="scams"><span class="nav-icon">🚫</span><span class="nav-label">Scam Guard</span><span class="nav-check"></span></a>
-  <a href="questions.html" class="" data-page="questions"><span class="nav-icon">❓</span><span class="nav-label">Questions Guide</span><span class="nav-check"></span></a>
-  <a href="briefs.html" class="active" data-page="briefs"><span class="nav-icon">📄</span><span class="nav-label">Professional Briefs</span><span class="nav-check"></span></a>
-  <div class="divider"></div>
+  <a href="scams.html"    data-page="scams"    ><span class="nav-icon">🚫</span><span class="nav-label">Scam Guard</span><span class="nav-check"></span></a>
+  <a href="questions.html"data-page="questions"><span class="nav-icon">❓</span><span class="nav-label">Questions Guide</span><span class="nav-check"></span></a>
+  <a href="briefs.html" class="active"><span class="nav-icon">📄</span><span class="nav-label">Professional Briefs</span><span class="nav-check"></span></a>
 </div>
 
 <main class="main">
   <div class="page-header">
-    <div class="phase-tag">Reference</div>
+    <div class="phase-tag">📄 Reference</div>
     <h1>Professional Briefs</h1>
-    <div class="subtitle">Hand these to each contractor and professional to set expectations clearly.</div>
+    <div class="subtitle">Hand the relevant brief to each professional during your first meeting. Each brief clearly states your requirements and has a sign-off section.</div>
     <div class="nav-btns">
-      <a class="nav-btn" href="questions.html">&larr; ← Questions Guide</a>
-      
+      <a class="nav-btn" href="questions.html">← Questions Guide</a>
     </div>
   </div>
-<div class="explain"><strong>How to Use:</strong> These briefs contain your requirements for each professional. Open the relevant section and show it to them during your meeting — or print the section and hand it to them. Each brief has a sign-off field for them to sign and confirm they understand the requirements.</div>
-<div style="border:1.5px dashed var(--border);border-radius:10px;padding:20px;margin:12px 0;background:#fafaf8;">
-  <p style="font-size:13px;color:var(--muted);margin-bottom:12px;">For the best experience with Professional Briefs (with print formatting and sign-off spaces):</p>
-  <a href="../Professional_Briefs.html" target="_blank" style="background:var(--primary);color:#fff;padding:10px 20px;border-radius:8px;text-decoration:none;font-weight:700;font-size:13px;">📄 Open Full Professional Briefs Document →</a>
-</div>
 
+  <!-- INTRO CARD -->
+  <div class="briefs-intro">
+    <h2>11 Professional Briefs — Ready to Share</h2>
+    <p>Each brief below covers one professional. Open the brief, show it on screen, or print the page and hand it over. Every brief includes what we require, what we will check, and a signature line.</p>
+    <button class="print-all-btn" onclick="window.print()">🖨️ Print All Briefs</button>
+  </div>
 
-<div style="background:#fff3cd;border:1px solid #ffc107;border-radius:8px;padding:14px 18px;margin-bottom:16px;font-size:13px;">
-  <strong>How to Use These Briefs:</strong> Each page below is a brief for one professional. When you meet them, open this document and show them their section. It tells them exactly what you expect, what materials to use, and what you will check. You can also print individual sections to hand them a physical copy. Use the Print button to print the full document.
-  <div style="margin-top:8px;"><button onclick="window.print()" style="background:#1a3c5e;color:#fff;border:none;padding:8px 16px;border-radius:6px;font-weight:700;cursor:pointer;">🖨️ Print All Briefs</button></div>
-</div>
+  <!-- QUICK NAV PILLS -->
+  <div class="brief-pills">
+    <a href="#brief-soil"    class="brief-pill">🔬 Soil Engineer</a>
+    <a href="#brief-struct"  class="brief-pill">🏛️ Structural Engineer</a>
+    <a href="#brief-arch"    class="brief-pill">📐 Architect</a>
+    <a href="#brief-cont"    class="brief-pill">👷 Contractor</a>
+    <a href="#brief-plumb"   class="brief-pill">🔧 Plumber</a>
+    <a href="#brief-elec"    class="brief-pill">⚡ Electrician</a>
+    <a href="#brief-water"   class="brief-pill">💦 Waterproofing</a>
+    <a href="#brief-tile"    class="brief-pill">🔲 Tile Layer</a>
+    <a href="#brief-paint"   class="brief-pill">🎨 Painter</a>
+    <a href="#brief-kitchen" class="brief-pill">🍳 Kitchen/Carpenter</a>
+    <a href="#brief-window"  class="brief-pill">🪟 Window Supplier</a>
+  </div>
 
-<!-- ══ BRIEF 1 — SOIL ENGINEER ══ -->
-<div class="brief" id="soil">
-<div class="brief-header" style="background:linear-gradient(135deg,#0f4c75,#1b6ca8);">
-  <div class="brief-icon">🔬</div>
-  <div class="brief-info"><h2>Brief for Soil Test / Geotechnical Engineer</h2><p>Show this to the company that will test the soil before construction starts</p></div>
-</div>
-<div class="brief-body">
-  <p style="color:#4b5563;font-size:13px;font-style:italic;">Dear Engineer, we are planning to build a G+2 family house (foundation designed for G+3) on a 30×60 ft plot in Pokhara. Below are our specific requirements for the soil investigation.</p>
-
-  <div class="section-label">What We Require You to Do</div>
-  <ul>
-    <li>Minimum 2 boreholes on our plot — one near the front, one near the rear</li>
-    <li>Drilling depth: minimum 25 feet (8 metres), or as required by soil conditions</li>
-    <li>SPT (Standard Penetration Test) at every 1.5m of depth</li>
-    <li>Groundwater table level determination</li>
-    <li>Soil classification at each depth (clay, sand, gravel, rock)</li>
-    <li>We will be physically present during all drilling work — please inform us in advance</li>
-    <li>We will take photographs and video of the drilling process</li>
-  </ul>
-
-  <div class="section-label">Report Requirements</div>
-  <ul>
-    <li>Printed report on company letterhead, signed by a licensed engineer</li>
-    <li>Our specific plot address must appear on the report</li>
-    <li>SBC (Safe Bearing Capacity) value clearly stated in kN/m²</li>
-    <li>Borehole log with depth measurements and soil samples noted</li>
-    <li>Groundwater level</li>
-    <li>Recommended foundation type for G+3-capable design</li>
-    <li>Seismic site classification</li>
-    <li>Settlement risk assessment</li>
-    <li>Earthquake zone design recommendations</li>
-  </ul>
-
-  <div class="req"><strong>⚠️ We Will Not Accept:</strong> A report without our specific plot address. A report delivered within 24 hours of a 2-borehole test (not enough time). A report without clear SBC value. A generic report that appears copied from another site.</div>
-
-  <div class="sign-block">
-    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);">Agreement</div>
-    <div class="sign-row">
-      <div class="sign-field"><label>Test Company Name</label><div class="line"></div></div>
-      <div class="sign-field"><label>Engineer Name</label><div class="line"></div></div>
-      <div class="sign-field"><label>Date of Agreement</label><div class="line"></div></div>
-      <div class="sign-field"><label>Agreed Fee</label><div class="line"></div></div>
+  <!-- ══ SOIL ENGINEER ══ -->
+  <div class="brief" id="brief-soil">
+    <div class="brief-header bh-soil">
+      <div class="brief-icon">🔬</div>
+      <div class="brief-info">
+        <div class="brief-role">Hire First — Before Any Digging</div>
+        <h2>Soil Test / Geotechnical Engineer</h2>
+        <p>Tests what is underground before we design the foundation</p>
+      </div>
     </div>
-    <div class="sign-row">
-      <div class="sign-field"><label>Test Start Date</label><div class="line"></div></div>
-      <div class="sign-field"><label>Report Delivery Date</label><div class="line"></div></div>
-      <div class="sign-field"><label>Company Signature</label><div class="line"></div></div>
+    <div class="brief-body">
+      <div class="section-label">What We Require You to Do</div>
+      <ul class="req-list">
+        <li>Minimum 2 boreholes on our 30×60 ft plot — front and rear</li>
+        <li>Drilling depth: minimum 25 feet (8 metres), or deeper if soft soil encountered</li>
+        <li>SPT (Standard Penetration Test) at every 1.5m of depth</li>
+        <li>Groundwater table level determination</li>
+        <li>We will be physically present during all drilling — please inform us in advance</li>
+        <li>We will take photographs and video of the drilling process</li>
+      </ul>
+      <div class="section-label">Report Must Include</div>
+      <ul class="req-list">
+        <li>Our specific plot address on the report — no address = not accepted</li>
+        <li>SBC (Safe Bearing Capacity) value clearly stated in kN/m²</li>
+        <li>Borehole log with depth measurements and soil type at each level</li>
+        <li>Groundwater level</li>
+        <li>Recommended foundation type for a G+3-capable design</li>
+        <li>Seismic site classification</li>
+        <li>Settlement risk assessment</li>
+        <li>Report signed by a licensed engineer on company letterhead</li>
+      </ul>
+      <div class="brief-warn"><strong>⚠️ We Will NOT Accept:</strong> A report without our plot address. A report delivered within 24 hours of booking (not enough time for real testing). Any generic copied report.</div>
+      <div class="sign-block">
+        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);">Agreement & Sign-Off</div>
+        <div class="sign-row">
+          <div class="sign-field"><label>Company Name</label><div class="line"></div></div>
+          <div class="sign-field"><label>Engineer Name</label><div class="line"></div></div>
+          <div class="sign-field"><label>Date of Test</label><div class="line"></div></div>
+        </div>
+        <div class="sign-row">
+          <div class="sign-field"><label>Agreed Fee</label><div class="line"></div></div>
+          <div class="sign-field"><label>Report Delivery Date</label><div class="line"></div></div>
+          <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- ══ BRIEF 2 — STRUCTURAL ENGINEER ══ -->
-<div class="brief" id="structural">
-<div class="brief-header" style="background:linear-gradient(135deg,#1a3c5e,#2d5a8a);">
-  <div class="brief-icon">🏛️</div>
-  <div class="brief-info"><h2>Brief for Structural Engineer</h2><p>The most important professional for earthquake safety</p></div>
-</div>
-<div class="brief-body">
-  <div class="section-label">Our House Details</div>
-  <table>
-    <tr><td><strong>Plot</strong></td><td>30 × 60 feet, rectangular, North-East facing</td></tr>
-    <tr><td><strong>Construction Plan</strong></td><td>G+2 (Ground floor + 2 upper floors)</td></tr>
-    <tr><td><strong>Foundation Requirement</strong></td><td>Must be designed for G+3 (even though we are building G+2 now)</td></tr>
-    <tr><td><strong>Location</strong></td><td>Pokhara, Nepal — Seismic Zone V (high earthquake risk)</td></tr>
-    <tr><td><strong>Wall Material</strong></td><td>AAC Blocks preferred. Red brick acceptable.</td></tr>
-  </table>
-
-  <div class="section-label">Our Requirements From You</div>
-  <ul>
-    <li>Full structural design based on the soil test report we will provide</li>
-    <li>Design must comply with Nepal National Building Code (NBC) for seismic zone</li>
-    <li>Column layout must be symmetric for earthquake performance</li>
-    <li>Concrete grade: minimum M25 for all columns and beams; M20 for slabs</li>
-    <li>Steel grade: Fe 500D TMT bars throughout</li>
-    <li>All columns must have ductile detailing (earthquake-resistant reinforcement)</li>
-    <li>Plinth beam at ground level around entire perimeter</li>
-    <li>Lintel beam above every door and window opening</li>
-    <li>Complete reinforcement bar-bending schedule (drawing showing exactly how steel is bent)</li>
-    <li>Shuttering load calculations included</li>
-    <li>Minimum 6 site visits during construction (foundation, column steel check, slab steel check, post-construction)</li>
-    <li>You must check steel placement BEFORE each concrete pour — no pour without your approval</li>
-  </ul>
-
-  <div class="req"><strong>⚠️ We Will Not Accept:</strong> Design without soil test data. Generic column sizes "estimated." Design for G+2 only (must be G+3 capable). No site visits after handing over drawings. Any change in concrete or steel grade without written justification.</div>
-
-  <div class="sign-block">
-    <div style="font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--muted);">Agreement</div>
-    <div class="sign-row">
-      <div class="sign-field"><label>Engineer Name</label><div class="line"></div></div>
-      <div class="sign-field"><label>NEC Registration Number</label><div class="line"></div></div>
-      <div class="sign-field"><label>Phone</label><div class="line"></div></div>
+  <!-- ══ STRUCTURAL ENGINEER ══ -->
+  <div class="brief" id="brief-struct">
+    <div class="brief-header bh-struct">
+      <div class="brief-icon">🏛️</div>
+      <div class="brief-info">
+        <div class="brief-role">Hire Second — Most Critical Professional</div>
+        <h2>Structural Engineer</h2>
+        <p>Designs the earthquake-safe skeleton of the house</p>
+      </div>
     </div>
-    <div class="sign-row">
-      <div class="sign-field"><label>Number of Site Visits Agreed</label><div class="line"></div></div>
-      <div class="sign-field"><label>Fee Agreed</label><div class="line"></div></div>
-      <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+    <div class="brief-body">
+      <div class="section-label">Our House Details</div>
+      <table class="brief-table">
+        <tr><th>Item</th><th>Specification</th></tr>
+        <tr><td>Plot</td><td>30 × 60 feet, rectangular, North-East facing, Pokhara Nepal</td></tr>
+        <tr><td>Build Plan</td><td>G+2 — but foundation must be designed for G+3</td></tr>
+        <tr><td>Seismic Zone</td><td>Zone V (highest risk) — Nepal National Building Code must be followed</td></tr>
+        <tr><td>Concrete Grade</td><td>M25 for all columns and beams · M20 for slabs</td></tr>
+        <tr><td>Steel Grade</td><td>Fe 500D TMT bars throughout — ductile grade</td></tr>
+        <tr><td>Wall Material</td><td>AAC Blocks preferred</td></tr>
+      </table>
+      <div class="section-label">What We Require From You</div>
+      <ul class="req-list">
+        <li>Full structural design based on the soil test report we will provide</li>
+        <li>Column layout must be symmetric and earthquake-optimised</li>
+        <li>All columns must have ductile detailing (earthquake-resistant reinforcement)</li>
+        <li>Plinth beam at ground level around entire perimeter</li>
+        <li>Lintel beam above every door and window opening</li>
+        <li>Complete reinforcement bar-bending schedule drawings</li>
+        <li>Minimum 6 site visits during construction</li>
+        <li>You must check and approve steel placement BEFORE every concrete pour</li>
+      </ul>
+      <div class="brief-warn"><strong>⚠️ We Will NOT Accept:</strong> Design without soil test data. Estimation of column sizes without calculation. Design for G+2 only. No site visits after drawings are handed over.</div>
+      <div class="sign-block">
+        <div class="sign-row">
+          <div class="sign-field"><label>Engineer Name</label><div class="line"></div></div>
+          <div class="sign-field"><label>NEC Registration No.</label><div class="line"></div></div>
+          <div class="sign-field"><label>Phone</label><div class="line"></div></div>
+        </div>
+        <div class="sign-row">
+          <div class="sign-field"><label>Site Visits Agreed</label><div class="line"></div></div>
+          <div class="sign-field"><label>Fee Agreed</label><div class="line"></div></div>
+          <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- ══ BRIEF 3 — ARCHITECT ══ -->
-<div class="brief" id="architect">
-<div class="brief-header" style="background:linear-gradient(135deg,#2a7a4b,#1a5c38);">
-  <div class="brief-icon">📐</div>
-  <div class="brief-info"><h2>Brief for Architect</h2><p>Our design requirements and the feel we want for our family home</p></div>
-</div>
-<div class="brief-body">
-  <div class="section-label">House Character and Style</div>
-  <p>We want a "Modern Warm Minimal Family House." This means: clean and calm look, warm materials (wood tones, earthy colours), good natural light, no overly trendy or Instagram-style design. The house should feel peaceful, premium, and timeless — not flashy.</p>
-
-  <div class="section-label">Floor Planning Requirements</div>
-  <table>
-    <tr><th>Floor</th><th>What Must Be on This Floor</th><th>Special Notes</th></tr>
-    <tr><td><strong>Ground Floor</strong></td><td>Parents' bedroom (ground floor only — for old age access). Kitchen. Living/dining. Guest toilet. Puja room. Utility room. Shoe entrance area (mudroom at main entrance).</td><td>Must be elderly-friendly: wide doors (min 1000mm), no level differences inside, anti-skid floors throughout, grab bar provision in one bathroom.</td></tr>
-    <tr><td><strong>First Floor</strong></td><td>Our master bedroom (with ensuite). 2 children's/guest rooms. Family lounge. Home office/study. Common bathroom.</td><td>Master bedroom must get morning sunlight (NE advantage). Study can later become music/hobby room — plan thick walls for that room.</td></tr>
-    <tr><td><strong>Second Floor</strong></td><td>2-bedroom independent flat layout (bedroom, hall, kitchen, bathroom).</td><td>Must be able to function independently for future rental. Separate staircase access and separate meter provision.</td></tr>
-    <tr><td><strong>Terrace</strong></td><td>Accessible terrace space. Provision for solar water heater and solar panels.</td><td>Slope to drain on terrace slab. Light-coloured tiles.</td></tr>
-  </table>
-
-  <div class="section-label">Design Requirements We Specifically Need</div>
-  <ul>
-    <li><strong>Cross ventilation:</strong> Every room must have openings on at least two walls for through-air flow</li>
-    <li><strong>Service zones:</strong> All bathrooms on every floor must be stacked directly above each other (same position on each floor). Kitchen also aligned vertically. This groups all plumbing in one area.</li>
-    <li><strong>Entrance mudroom:</strong> A covered outdoor porch (minimum 1.2m × 1.8m) with built-in bench and shoe cabinet before the main entrance door</li>
-    <li><strong>No sharp edges:</strong> All wall corners to use bullnose corner beading — rounded, not 90-degree sharp corners. This applies throughout the entire house.</li>
-    <li><strong>Staircase:</strong> Straight or L-shaped. Minimum 1200mm wide. Riser maximum 160mm. Under-staircase usable storage room.</li>
-    <li><strong>Setbacks:</strong> Front: 8–10 feet. Sides: 3–4 feet each. Rear: 4–6 feet (sewage side — important for waterproofing)</li>
-    <li><strong>Music/hobby room:</strong> One room on first floor to be designated as future music/hobby room — use thicker walls (230mm) and plan extra electrical conduit in ceiling and walls</li>
-    <li><strong>Storage:</strong> Every floor must have dedicated storage/utility space. Under-staircase room. Dust-proof store room with sealed door.</li>
-    <li><strong>Rear garden:</strong> Leave 4–6 feet rear setback for a vegetable garden area. One outdoor water tap provision at rear.</li>
-    <li><strong>Window sizes:</strong> Living room windows minimum 1500mm × 1350mm. Bedroom windows minimum 1200mm × 1200mm. Bathroom windows frosted glass, high on wall.</li>
-    <li><strong>Window sill design:</strong> All window sills (external ledge) in granite or Kota stone, sloped outward for rain drainage, with waterproof sealant at wall junction.</li>
-  </ul>
-
-  <div class="req"><strong>⚠️ We Will Not Accept:</strong> Rooms with windows on only one wall. Bathrooms on different positions on different floors (must be stacked). Design without mudroom/entrance shoe area. Sharp 90-degree wall corners throughout (bullnose is mandatory). Maximizing build area at the cost of setbacks — we need the breathing space.</div>
-
-  <div class="sign-block">
-    <div class="sign-row">
-      <div class="sign-field"><label>Architect Name</label><div class="line"></div></div>
-      <div class="sign-field"><label>Drawings Package Agreed</label><div class="line"></div></div>
-      <div class="sign-field"><label>Number of Revisions Included</label><div class="line"></div></div>
-      <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+  <!-- ══ ARCHITECT ══ -->
+  <div class="brief" id="brief-arch">
+    <div class="brief-header bh-arch">
+      <div class="brief-icon">📐</div>
+      <div class="brief-info">
+        <div class="brief-role">Hire Third</div>
+        <h2>Architect</h2>
+        <p>Designs the layout, look, and feel of the house</p>
+      </div>
+    </div>
+    <div class="brief-body">
+      <div class="section-label">House Style & Character</div>
+      <p style="color:var(--text-soft);font-size:14px;">"<strong>Modern Warm Minimal Family House</strong>" — warm materials, clean layout, natural light, peaceful atmosphere. Not trendy or flashy. Timeless and premium.</p>
+      <div class="section-label">Non-Negotiable Design Requirements</div>
+      <ul class="req-list">
+        <li><strong>Cross-ventilation:</strong> Every single room must have openings on at least two walls</li>
+        <li><strong>Service zones:</strong> All bathrooms on every floor must be stacked directly above each other. Kitchen also aligned vertically.</li>
+        <li><strong>Entrance mudroom:</strong> Covered porch (min 1.2m × 1.8m) with bench and shoe cabinet before main door</li>
+        <li><strong>No sharp edges:</strong> All wall corners to have bullnose rounded bead throughout the entire house</li>
+        <li><strong>Ground floor:</strong> Elderly-friendly — wide doors (1000mm+), no level differences, anti-skid floors, grab bar provision</li>
+        <li><strong>Second floor:</strong> Must be designed to function independently (future rental) — own kitchen, bathroom, and separate staircase access</li>
+        <li><strong>Music/hobby room:</strong> One room on first floor with thicker walls (230mm) and extra electrical conduit provisions</li>
+        <li><strong>Setbacks:</strong> Front 8–10ft · Sides 3–4ft each · Rear 4–6ft (sewage side)</li>
+        <li><strong>Window sills:</strong> Granite or Kota stone — not tiles — sloped outward with drip edge</li>
+        <li><strong>Dust-proof storage room</strong> with sealed door and epoxy floor</li>
+      </ul>
+      <div class="sign-block">
+        <div class="sign-row">
+          <div class="sign-field"><label>Architect Name</label><div class="line"></div></div>
+          <div class="sign-field"><label>Drawings Package</label><div class="line"></div></div>
+          <div class="sign-field"><label>Revisions Included</label><div class="line"></div></div>
+          <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- ══ BRIEF 4 — CONTRACTOR ══ -->
-<div class="brief" id="contractor">
-<div class="brief-header" style="background:linear-gradient(135deg,#78350f,#9a4a1a);">
-  <div class="brief-icon">👷</div>
-  <div class="brief-info"><h2>Brief for Main Contractor (Builder)</h2><p>The team that builds the house. These are our non-negotiable requirements.</p></div>
-</div>
-<div class="brief-body">
-  <div class="section-label">Materials — Cannot Be Changed Without Written Permission</div>
-  <table>
-    <tr><th>Material</th><th>Required Specification</th><th>What We Will Check</th></tr>
-    <tr><td>Steel bars</td><td>Fe 500D TMT bars, branded manufacturer. Mill Test Certificate required per delivery.</td><td>Mill Test Certificate. Weight 5 random bars per delivery to check unit weight.</td></tr>
-    <tr><td>Cement</td><td>OPC 53 Grade for structural work. Manufacturing date within 3 months. Branded manufacturer.</td><td>Manufacturing date on every bag. No old stock.</td></tr>
-    <tr><td>Concrete for columns/beams</td><td>M25 grade. Water-cement ratio 0.40–0.45 maximum. No extra water to be added on site.</td><td>Water-cement ratio compliance. Concrete cube samples for lab testing at 7 and 28 days.</td></tr>
-    <tr><td>Concrete for slabs</td><td>M20 grade. Water-cement ratio 0.45 maximum.</td><td>Same cube testing.</td></tr>
-    <tr><td>Blocks/Bricks</td><td>AAC blocks preferred. Red brick acceptable if AAC not available. No hollow blocks for main walls.</td><td>Specification sheet for block density and strength.</td></tr>
-    <tr><td>Sand</td><td>Clean river sand or M-sand. No excessive clay or mud content.</td><td>Squeeze test — should not leave clay staining on hand.</td></tr>
-  </table>
-
-  <div class="section-label">Process Requirements — Must Be Followed</div>
-  <ul>
-    <li><strong>Structural engineer approval before every concrete pour:</strong> No concrete poured without structural engineer's sign-off that steel is correct</li>
-    <li><strong>Curing mandatory:</strong> Every structural element (footing, column, beam, slab) must be water-cured for minimum 7 days. Wet burlap or ponding — not just wet for one day.</li>
-    <li><strong>Vibrator machine use:</strong> Concrete vibrator machine must be used during every structural concrete pour. Not optional.</li>
-    <li><strong>Cover blocks:</strong> Plastic or concrete cover blocks must be placed on all steel before concrete pour to maintain correct cover distance</li>
-    <li><strong>No excavation or pouring during active rain</strong></li>
-    <li><strong>All wall corners:</strong> Bullnose corner bead on EVERY internal wall corner — no sharp 90-degree corners. This applies throughout the entire house including staircase area.</li>
-    <li><strong>Window sill:</strong> All external window sills in granite or Kota stone, laid with waterproof mortar, sloped outward, with silicone sealant at wall junction</li>
-    <li><strong>DPC:</strong> Damp proof course (waterproof concrete layer) at plinth level before walls start</li>
-    <li><strong>Anti-termite treatment:</strong> Applied around foundation before backfilling soil</li>
-  </ul>
-
-  <div class="section-label">Payment Terms (Non-Negotiable)</div>
-  <ul>
-    <li>Maximum 20% advance before work begins</li>
-    <li>All remaining payments by milestone only — we will inspect before releasing payment</li>
-    <li>Final 10% held back for 3 months after completion to cover any defects found</li>
-    <li>If any material is substituted without our written approval, the cost of correcting it is the contractor's responsibility</li>
-  </ul>
-
-  <div class="req"><strong>⚠️ Immediate Disqualification:</strong> Any contractor who says the soil test is not needed. Any contractor who refuses to put materials and grades in writing. Any contractor who demands more than 30% advance. Any contractor who says structural engineer visits are unnecessary.</div>
-
-  <div class="sign-block">
-    <div class="sign-row">
-      <div class="sign-field"><label>Contractor Name / Company</label><div class="line"></div></div>
-      <div class="sign-field"><label>Supervisor Name (on site daily)</label><div class="line"></div></div>
-      <div class="sign-field"><label>Contact Number</label><div class="line"></div></div>
+  <!-- ══ CONTRACTOR ══ -->
+  <div class="brief" id="brief-cont">
+    <div class="brief-header bh-cont">
+      <div class="brief-icon">👷</div>
+      <div class="brief-info">
+        <div class="brief-role">Hire Fourth — Written Contract Only</div>
+        <h2>Main Contractor / Builder</h2>
+        <p>Builds the house — must follow structural engineer's drawings exactly</p>
+      </div>
     </div>
-    <div class="sign-row">
-      <div class="sign-field"><label>Agreed Total Contract Value</label><div class="line"></div></div>
-      <div class="sign-field"><label>Advance Amount</label><div class="line"></div></div>
-      <div class="sign-field"><label>Estimated Completion Date</label><div class="line"></div></div>
-      <div class="sign-field"><label>Contractor Signature</label><div class="line"></div></div>
+    <div class="brief-body">
+      <div class="section-label">Material Standards — Cannot Be Changed Without Written Permission</div>
+      <table class="brief-table">
+        <tr><th>Material</th><th>Required Specification</th><th>How We Will Check</th></tr>
+        <tr><td>Steel bars</td><td>Fe 500D TMT — branded manufacturer, Mill Test Certificate per delivery</td><td>Check MTC. Weigh 5 random bars per delivery.</td></tr>
+        <tr><td>Cement (structural)</td><td>OPC 53 Grade, branded, manufacturing date within 3 months</td><td>Check manufacturing date on every bag.</td></tr>
+        <tr><td>Concrete (columns/beams)</td><td>M25 grade, water:cement ratio maximum 0.40–0.45</td><td>Cube test at 7 and 28 days via third-party lab.</td></tr>
+        <tr><td>Concrete (slabs)</td><td>M20 grade, water:cement ratio maximum 0.45</td><td>Same cube testing.</td></tr>
+        <tr><td>Walls</td><td>AAC blocks preferred — no hollow blocks for main walls</td><td>Specification sheet for density and strength.</td></tr>
+      </table>
+      <div class="section-label">Process Rules</div>
+      <ul class="req-list">
+        <li>No concrete poured without structural engineer's sign-off that steel is correct</li>
+        <li>Every structural element cured with water for minimum 7 days after pour</li>
+        <li>Concrete vibrator machine used during every structural pour — not optional</li>
+        <li>Cover blocks on all steel before every pour</li>
+        <li>All wall corners: bullnose corner bead throughout entire house — no sharp corners</li>
+        <li>DPC (waterproof concrete layer) at plinth level before walls start</li>
+        <li>Anti-termite treatment around foundation before backfilling</li>
+      </ul>
+      <div class="section-label">Payment Terms — Non-Negotiable</div>
+      <ul class="req-list">
+        <li>Maximum 20% advance before work begins</li>
+        <li>All remaining payments by milestone — we inspect before releasing each payment</li>
+        <li>Final 10% held for 3 months to cover defects found after handover</li>
+      </ul>
+      <div class="brief-warn"><strong>🚨 Immediate Disqualification:</strong> Saying soil test is not needed · Refusing written contract with material grades · Demanding more than 30% advance · Saying structural engineer site visits are unnecessary.</div>
+      <div class="sign-block">
+        <div class="sign-row">
+          <div class="sign-field"><label>Contractor / Company</label><div class="line"></div></div>
+          <div class="sign-field"><label>Site Supervisor Name</label><div class="line"></div></div>
+          <div class="sign-field"><label>Contact Number</label><div class="line"></div></div>
+        </div>
+        <div class="sign-row">
+          <div class="sign-field"><label>Total Contract Value</label><div class="line"></div></div>
+          <div class="sign-field"><label>Advance Amount</label><div class="line"></div></div>
+          <div class="sign-field"><label>Completion Date</label><div class="line"></div></div>
+          <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- ══ BRIEF 5 — PLUMBER ══ -->
-<div class="brief" id="plumber">
-<div class="brief-header" style="background:linear-gradient(135deg,#1a5c8a,#0f3d6e);">
-  <div class="brief-icon">🔧</div>
-  <div class="brief-info"><h2>Brief for Plumber</h2><p>All water supply, drainage, hot water, and special system requirements</p></div>
-</div>
-<div class="brief-body">
-  <div class="section-label">Before Starting — Must Be Done First</div>
-  <ul>
-    <li>Provide a complete plumbing layout drawing showing every pipe route, every tap point, every drain point — BEFORE any pipe is laid or any wall is opened</li>
-    <li>We will review and approve this drawing before work begins</li>
-  </ul>
-
-  <div class="section-label">Pipe Materials Required</div>
-  <table>
-    <tr><th>Use</th><th>Required Pipe Material</th><th>Not Acceptable</th></tr>
-    <tr><td>Cold water supply inside house</td><td>CPVC pipe, branded (Ashirvad, Supreme, or equivalent)</td><td>Unknown local brand pipe</td></tr>
-    <tr><td>Hot water supply lines</td><td>CPVC pipe only (must be marked CPVC — safe for hot water)</td><td>Regular uPVC or PVC for hot water lines — will warp and fail</td></tr>
-    <tr><td>All drain pipes inside house</td><td>SWR (Soil Waste Rain) PVC, heavy gauge, branded</td><td>Thin walled regular PVC</td></tr>
-    <tr><td>Underground main drain</td><td>HDPE pipe (black, heavy duty)</td><td>Thin PVC underground</td></tr>
-  </table>
-
-  <div class="section-label">Design Rules We Require</div>
-  <ul>
-    <li><strong>Service zones:</strong> All bathrooms on each floor must be directly above each other (same position on every floor). Kitchen also aligned vertically. This is not optional.</li>
-    <li><strong>P-trap at every drain point:</strong> Every floor drain, every wash basin drain, every kitchen sink drain must have a P-trap (water seal U-bend) fitted. No exceptions.</li>
-    <li><strong>Stopcock valve at every room branch:</strong> Every bathroom and kitchen must have its own shut-off valve so water can be stopped to just that room without stopping the whole house</li>
-    <li><strong>Isolation valve under every toilet</strong></li>
-    <li><strong>Drain slope:</strong> All drain pipes must slope at minimum 1:40 gradient (2.5 cm drop per metre). We will test water flow before walls are closed.</li>
-    <li><strong>Hot water pipe insulation:</strong> All hot water supply pipes wrapped with foam pipe lagging</li>
-    <li><strong>Solar water heater pipe provision:</strong> Run cold and hot water pipes to roof terrace for future solar water heater connection (even if not installing now)</li>
-    <li><strong>AC condensate drain:</strong> Each AC unit location must have a dedicated drain pipe to carry condensation water to drain — not left to drip down wall</li>
-    <li><strong>Underground sump tank location:</strong> Rear of house (as per architect's drawing)</li>
-    <li><strong>Washing machine drain standpipe:</strong> Minimum 60 cm height before drain connection</li>
-  </ul>
-
-  <div class="section-label">Testing Before Closing Walls</div>
-  <ul>
-    <li>All supply pipes must be pressure-tested at 3 bar for 30 minutes with no drop — before plastering</li>
-    <li>All drain pipes must be flow-tested with water — water must flow freely to drain before plastering</li>
-    <li>Water flow test after bathroom tiles laid — pour water anywhere on floor, must flow to drain within 10 seconds</li>
-  </ul>
-
-  <div class="req"><strong>⚠️ We Will Check:</strong> All pipe packaging/brand before installation begins. P-trap under every drain before tiles are laid. Drain flow before plastering. We will reject work that does not meet these standards and payment will be withheld until corrected.</div>
-
-  <div class="sign-block">
-    <div class="sign-row">
-      <div class="sign-field"><label>Plumber Name / Company</label><div class="line"></div></div>
-      <div class="sign-field"><label>Pipe Brand Agreed (supply lines)</label><div class="line"></div></div>
-      <div class="sign-field"><label>Pipe Brand (drain lines)</label><div class="line"></div></div>
-      <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+  <!-- ══ PLUMBER ══ -->
+  <div class="brief" id="brief-plumb">
+    <div class="brief-header bh-plumb">
+      <div class="brief-icon">🔧</div>
+      <div class="brief-info">
+        <div class="brief-role">Before Walls Close</div>
+        <h2>Plumber</h2>
+        <p>All water supply, drainage, hot and cold water systems</p>
+      </div>
+    </div>
+    <div class="brief-body">
+      <div class="section-label">Before Starting — Drawing Required First</div>
+      <ul class="req-list">
+        <li>Provide a complete plumbing layout drawing BEFORE any pipe is laid</li>
+        <li>Drawing must show every pipe route, every tap point, every drain point</li>
+        <li>We will review and approve before work begins</li>
+      </ul>
+      <div class="section-label">Pipe Materials Required</div>
+      <table class="brief-table">
+        <tr><th>Use</th><th>Required Pipe</th><th>Not Acceptable</th></tr>
+        <tr><td>Cold water supply</td><td>CPVC or uPVC — branded (Ashirvad, Supreme)</td><td>Unknown local brand</td></tr>
+        <tr><td>Hot water supply</td><td>CPVC only — must be marked CPVC on pipe</td><td>Regular uPVC for hot lines — will warp</td></tr>
+        <tr><td>Drain pipes inside</td><td>SWR PVC, heavy gauge, branded</td><td>Thin walled regular PVC</td></tr>
+        <tr><td>Underground drain</td><td>HDPE (black heavy-duty)</td><td>Thin PVC underground</td></tr>
+      </table>
+      <div class="section-label">Rules We Require</div>
+      <ul class="req-list">
+        <li>Service zones — all bathrooms stacked vertically on every floor (same position)</li>
+        <li>P-trap (water seal) at every floor drain, basin drain, and kitchen sink — no exceptions</li>
+        <li>Stopcock (shut-off tap) at every bathroom branch line</li>
+        <li>Drain pipes sloped at minimum 1 cm per meter toward drain</li>
+        <li>Hot water pipes wrapped with foam insulation sleeve</li>
+        <li>Solar water heater pipe provision run to roof terrace</li>
+        <li>AC condensation drain piped to drain — not left to drip down wall</li>
+        <li>Supply pipes pressure-tested at 3 bar for 30 minutes before walls are plastered</li>
+        <li>Drain pipes flow-tested with water before walls are plastered</li>
+      </ul>
+      <div class="sign-block">
+        <div class="sign-row">
+          <div class="sign-field"><label>Plumber Name</label><div class="line"></div></div>
+          <div class="sign-field"><label>Pipe Brand (supply)</label><div class="line"></div></div>
+          <div class="sign-field"><label>Pipe Brand (drain)</label><div class="line"></div></div>
+          <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- ══ BRIEF 6 — ELECTRICIAN ══ -->
-<div class="brief" id="electrician">
-<div class="brief-header" style="background:linear-gradient(135deg,#713f12,#92400e);">
-  <div class="brief-icon">⚡</div>
-  <div class="brief-info"><h2>Brief for Electrician</h2><p>Complete electrical requirements including master switches, separate meter, and all appliances</p></div>
-</div>
-<div class="brief-body">
-  <div class="section-label">Before Starting — Drawing Required</div>
-  <ul>
-    <li>Provide a complete room-by-room electrical layout drawing showing every circuit, every socket location, every switch location — BEFORE any wire is laid</li>
-    <li>This drawing must be approved by us before work begins</li>
-  </ul>
-
-  <div class="section-label">Special Electrical Features We Require</div>
-  <ul>
-    <li><strong>Per-room master switch:</strong> A single switch OUTSIDE every room door that switches off all lights inside that room when pressed. This requires a relay or master control switch module per room.</li>
-    <li><strong>Whole-house master switch:</strong> One main switch (at main entrance or panel) that switches off all lights and fans in the entire house. This switch must NOT affect: refrigerator, CCTV cameras, internet router, security system, inverter output. These must be on separate "always-on" circuits that bypass the master switch.</li>
-    <li><strong>Separate meter for second floor (G+2):</strong> The entire second floor must have a completely separate electricity meter and separate distribution board from day one. All second floor circuits must run from this separate panel — not from the ground/first floor panel.</li>
-  </ul>
-
-  <div class="section-label">Wire and Circuit Specifications</div>
-  <table>
-    <tr><th>Circuit</th><th>Wire</th><th>Protection</th></tr>
-    <tr><td>Lights and fans</td><td>1.5 sq mm ISI copper</td><td>10A MCB</td></tr>
-    <tr><td>General sockets</td><td>2.5 sq mm ISI copper</td><td>16A MCB</td></tr>
-    <tr><td>Air conditioner (each)</td><td>4 sq mm ISI copper</td><td>20A MCB + ELCB</td></tr>
-    <tr><td>Electric geyser (each)</td><td>4 sq mm ISI copper</td><td>20A MCB + ELCB</td></tr>
-    <tr><td>Washing machine</td><td>4 sq mm ISI copper</td><td>20A MCB + ELCB</td></tr>
-    <tr><td>Kitchen OTG/Microwave</td><td>4 sq mm ISI copper</td><td>20A MCB</td></tr>
-    <tr><td>Induction cooktop</td><td>6 sq mm ISI copper</td><td>32A MCB</td></tr>
-    <tr><td>Water pump</td><td>4 sq mm ISI copper</td><td>20A MCB + motor protection relay</td></tr>
-    <tr><td>Refrigerator (always-on circuit)</td><td>2.5 sq mm ISI copper</td><td>16A MCB, separate from master switch</td></tr>
-    <tr><td>CCTV power (always-on)</td><td>1.5 sq mm ISI copper</td><td>6A MCB, separate from master switch</td></tr>
-    <tr><td>EV charging provision (parking)</td><td>6 sq mm ISI copper conduit run</td><td>32A MCB (run conduit now, socket later)</td></tr>
-    <tr><td>Solar panel provision (roof)</td><td>6 sq mm conduit run to panel</td><td>Plan space in DB for solar section</td></tr>
-    <tr><td>Inverter/UPS provision</td><td>10 sq mm to/from inverter location</td><td>Plan inverter room/alcove near main panel</td></tr>
-  </table>
-
-  <div class="section-label">Safety Requirements — Mandatory</div>
-  <ul>
-    <li>ELCB (Earth Leakage Circuit Breaker) on every bathroom circuit, kitchen circuit, all outdoor circuits, and washing machine circuit</li>
-    <li>All metal switch boxes and socket boxes must be earthed</li>
-    <li>All wiring inside rigid PVC conduit — no direct laying in plaster</li>
-    <li>All wire joins inside covered junction boxes — no open joins behind walls</li>
-    <li>MCB brands: ABB, Schneider, or Legrand only — no local/unbranded MCBs</li>
-    <li>Wire brand: ISI-marked copper wire from reputed brand (Finolex, Polycab, or equivalent)</li>
-    <li>Earthing resistance test with digital Earth Resistance Meter after completion — must read below 5 ohms. Test to be done in our presence.</li>
-  </ul>
-
-  <div class="req"><strong>⚠️ We Will Check:</strong> Wire brand printed on spool jacket each day. MCB brand. Earthing test result in our presence. We will reject any circuit without ELCB where required. Geyser switches must be OUTSIDE bathrooms (safety requirement).</div>
-
-  <div class="sign-block">
-    <div class="sign-row">
-      <div class="sign-field"><label>Electrician Name</label><div class="line"></div></div>
-      <div class="sign-field"><label>Wire Brand Agreed</label><div class="line"></div></div>
-      <div class="sign-field"><label>MCB Brand Agreed</label><div class="line"></div></div>
-      <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+  <!-- ══ ELECTRICIAN ══ -->
+  <div class="brief" id="brief-elec">
+    <div class="brief-header bh-elec">
+      <div class="brief-icon">⚡</div>
+      <div class="brief-info">
+        <div class="brief-role">Before Walls Close</div>
+        <h2>Electrician</h2>
+        <p>Complete wiring including master switches, separate G+2 meter, all appliances</p>
+      </div>
+    </div>
+    <div class="brief-body">
+      <div class="section-label">3 Special Features Required</div>
+      <ul class="req-list">
+        <li><strong>Per-room master switch:</strong> One switch outside each room door that turns off all lights in that room</li>
+        <li><strong>Whole-house master switch:</strong> One switch at entrance turns off all lights/fans. Fridge, CCTV, router, security system on separate always-on bypass circuit.</li>
+        <li><strong>Separate meter for 2nd floor:</strong> Second floor has its own electricity meter and distribution board — completely independent from ground and first floor</li>
+      </ul>
+      <div class="section-label">Wire and Circuit Specifications</div>
+      <table class="brief-table">
+        <tr><th>Circuit</th><th>Wire Size</th><th>Protection</th></tr>
+        <tr><td>Lights and fans</td><td>1.5 sq mm ISI copper</td><td>10A MCB</td></tr>
+        <tr><td>General sockets</td><td>2.5 sq mm ISI copper</td><td>16A MCB</td></tr>
+        <tr><td>Air conditioner (each)</td><td>4 sq mm ISI copper</td><td>20A MCB + ELCB</td></tr>
+        <tr><td>Geyser (each)</td><td>4 sq mm ISI copper</td><td>20A MCB + ELCB</td></tr>
+        <tr><td>Washing machine</td><td>4 sq mm ISI copper</td><td>20A MCB + ELCB</td></tr>
+        <tr><td>Induction cooktop</td><td>6 sq mm ISI copper</td><td>32A MCB</td></tr>
+        <tr><td>EV charging (parking)</td><td>6 sq mm conduit now</td><td>32A MCB point</td></tr>
+        <tr><td>Solar panel (future)</td><td>6 sq mm conduit to panel</td><td>Space in DB</td></tr>
+        <tr><td>Fridge (always-on)</td><td>2.5 sq mm ISI copper</td><td>16A MCB, bypass master</td></tr>
+        <tr><td>CCTV (always-on)</td><td>1.5 sq mm + Cat6 data</td><td>6A MCB, bypass master</td></tr>
+      </table>
+      <div class="section-label">Safety — All Mandatory</div>
+      <ul class="req-list">
+        <li>ELCB on all bathroom, kitchen, outdoor, and washing machine circuits</li>
+        <li>All metal boxes earthed — test earthing resistance in our presence (below 5 ohms)</li>
+        <li>All wiring inside rigid PVC conduit — no direct laying in plaster</li>
+        <li>MCB brands: ABB, Schneider, or Legrand only</li>
+        <li>Wire brand: ISI-marked copper from Finolex, Polycab, or equivalent</li>
+        <li>Geyser switches located OUTSIDE bathrooms — safety requirement</li>
+      </ul>
+      <div class="sign-block">
+        <div class="sign-row">
+          <div class="sign-field"><label>Electrician Name</label><div class="line"></div></div>
+          <div class="sign-field"><label>Wire Brand Agreed</label><div class="line"></div></div>
+          <div class="sign-field"><label>MCB Brand Agreed</label><div class="line"></div></div>
+          <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- ══ BRIEF 7 — WATERPROOFING ══ -->
-<div class="brief" id="waterproof">
-<div class="brief-header" style="background:linear-gradient(135deg,#1e40af,#1a3c5e);">
-  <div class="brief-icon">💦</div>
-  <div class="brief-info"><h2>Brief for Waterproofing Contractor</h2><p>Terrace, bathrooms, foundation, and rear wall requirements</p></div>
-</div>
-<div class="brief-body">
-  <div class="section-label">Terrace / Roof Waterproofing</div>
-  <ul>
-    <li>Product brand: Show us the sealed tin/container before opening. We will verify brand. Acceptable: Dr. Fixit, Fosroc, or equivalent certified product.</li>
-    <li>Number of coats: Minimum 2 coats of polymer membrane. First coat allowed to fully cure before second coat. No shortcuts.</li>
-    <li>Application area: Terrace slab + all parapet walls up to top + 300mm onto parapet wall outer face</li>
-    <li>Waterproof screed first (PCC with waterproofing admixture), then membrane coats</li>
-    <li><strong>Flood test mandatory:</strong> After membrane is complete, create a temporary water dam and fill terrace to 50mm depth. Leave for minimum 48 hours. We will inspect the ceiling of the room below for any dampness. No payment released until flood test is passed and signed off.</li>
-    <li>Protection tiles to be laid AFTER flood test is passed</li>
-    <li>Light-coloured terrace tiles (white or light grey) to reflect heat</li>
-  </ul>
-
-  <div class="section-label">Bathroom Waterproofing</div>
-  <ul>
-    <li>2 coats of waterproof membrane on all bathroom floors and walls up to 600mm (2 feet) height</li>
-    <li>In shower area: walls waterproofed to full shower height</li>
-    <li>24-hour water retention test before bathroom tile laying begins</li>
-  </ul>
-
-  <div class="section-label">Other Areas</div>
-  <ul>
-    <li>Rear wall (sewage-side): Extra waterproofing treatment + proper drainage slope away from house. Anti-damp backfill material.</li>
-    <li>All window and door frames: Waterproof sealant bead at junction of frame and wall — inside and outside</li>
-    <li>DPC at plinth level — already done by contractor, you to verify and confirm continuity</li>
-  </ul>
-
-  <div class="req"><strong>⚠️ We Will Check:</strong> Product brand before opening. We will count empty containers against area treated to verify quantity used. Flood test will be done with us present before any terrace tile is laid.</div>
-
-  <div class="sign-block">
-    <div class="sign-row">
-      <div class="sign-field"><label>Contractor Name</label><div class="line"></div></div>
-      <div class="sign-field"><label>Product Brand Agreed</label><div class="line"></div></div>
-      <div class="sign-field"><label>Flood Test Date Agreed</label><div class="line"></div></div>
-      <div class="sign-field"><label>Warranty Period</label><div class="line"></div></div>
+  <!-- ══ WATERPROOFING ══ -->
+  <div class="brief" id="brief-water">
+    <div class="brief-header bh-water">
+      <div class="brief-icon">💦</div>
+      <div class="brief-info">
+        <div class="brief-role">After Structure, Before Tiling</div>
+        <h2>Waterproofing Contractor</h2>
+        <p>Terrace, bathrooms, rear wall — 48-hour flood test required</p>
+      </div>
+    </div>
+    <div class="brief-body">
+      <div class="section-label">Terrace Waterproofing</div>
+      <ul class="req-list">
+        <li>Show us the sealed product tin before opening — we verify brand (Dr. Fixit, Fosroc, or equivalent)</li>
+        <li>Minimum 2 coats of polymer membrane — first coat fully cured before second</li>
+        <li>Area: entire terrace slab + all parapet walls up to top</li>
+        <li><strong>48-hour flood test mandatory</strong> — fill terrace with 50mm water, check ceiling below for dampness</li>
+        <li>No payment released and no terrace tiles laid until flood test passes and we sign off</li>
+      </ul>
+      <div class="section-label">Bathroom Waterproofing</div>
+      <ul class="req-list">
+        <li>2 coats on all bathroom floors and walls up to 600mm height</li>
+        <li>Shower area: walls waterproofed to full shower height</li>
+        <li>24-hour water test before any bathroom tile laying begins</li>
+      </ul>
+      <div class="section-label">Other Areas</div>
+      <ul class="req-list">
+        <li>Rear wall (sewage-side): extra 2-coat membrane + drainage slope away from house</li>
+        <li>All window and door frames: silicone sealant bead at junction — inside and outside</li>
+      </ul>
+      <div class="sign-block">
+        <div class="sign-row">
+          <div class="sign-field"><label>Contractor Name</label><div class="line"></div></div>
+          <div class="sign-field"><label>Product Brand Agreed</label><div class="line"></div></div>
+          <div class="sign-field"><label>Flood Test Date Agreed</label><div class="line"></div></div>
+          <div class="sign-field"><label>Warranty Period</label><div class="line"></div></div>
+          <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- ══ BRIEF 8 — TILE LAYER ══ -->
-<div class="brief" id="tilemason">
-<div class="brief-header" style="background:linear-gradient(135deg,#374151,#1f2937);">
-  <div class="brief-icon">🔲</div>
-  <div class="brief-info"><h2>Brief for Tile Layer / Mason</h2><p>Flooring, anti-skid, slope, no sharp edges</p></div>
-</div>
-<div class="brief-body">
-  <div class="section-label">Our Requirements</div>
-  <ul>
-    <li><strong>Batch number check before starting:</strong> Before laying any tiles in any room, check that all tile boxes have the same batch number. Do not mix batches — there will be colour variation.</li>
-    <li><strong>Anti-skid rating for bathrooms:</strong> Bathroom floor tiles must be R10 minimum. Shower area R11. Do not use smooth polished tiles on any bathroom floor.</li>
-    <li><strong>Bathroom floor slope:</strong> The floor must slope toward the drain at 1 cm per meter. We will test with water after tiling and before grouting — water must flow to drain immediately. If any area pools water, you must redo it.</li>
-    <li><strong>Staircase nosing:</strong> Every step of the staircase must have an anti-skid strip on the front edge of the step (step nosing). No smooth edges on any stair step. The step edge must be rounded or nosing strip applied — not sharp.</li>
-    <li><strong>All wall corners throughout house:</strong> Use bullnose corner bead (rounded metal strip) on every internal corner during plastering. This is mandatory — no sharp 90-degree wall corners anywhere in the house.</li>
-    <li><strong>Adhesive:</strong> Use the correct tile adhesive for each tile type. Do not substitute with plain cement+sand mortar for large format tiles.</li>
-    <li><strong>Tap test after laying:</strong> After tiles are laid (before grouting), tap each tile with a hollow wooden block. A hollow sound means the tile is not properly bonded — those tiles must be relaid.</li>
-    <li><strong>Grout:</strong> Grout colour to be confirmed with us before application. Use grout sealer on bathroom and kitchen grout after application.</li>
-    <li><strong>Window sill tiles:</strong> Not to be used for external window sills (cracks due to expansion). Sill to be in granite or Kota stone — tiles only for walls and floors.</li>
-  </ul>
-
-  <div class="sign-block">
-    <div class="sign-row">
-      <div class="sign-field"><label>Contractor Name</label><div class="line"></div></div>
-      <div class="sign-field"><label>Bathroom slope test date agreed</label><div class="line"></div></div>
-      <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+  <!-- ══ TILE LAYER ══ -->
+  <div class="brief" id="brief-tile">
+    <div class="brief-header bh-tile">
+      <div class="brief-icon">🔲</div>
+      <div class="brief-info">
+        <div class="brief-role">Finishing Phase</div>
+        <h2>Tile Layer / Mason</h2>
+        <p>Flooring, bathroom slope test, no sharp corners</p>
+      </div>
+    </div>
+    <div class="brief-body">
+      <div class="section-label">Our Requirements</div>
+      <ul class="req-list">
+        <li>Check batch number on ALL tile boxes before laying — all must match, no mixing batches</li>
+        <li>Bathroom floor tiles: minimum R10 anti-skid rating — check specification sheet</li>
+        <li>Shower area: R11 anti-skid rating</li>
+        <li>Bathroom floor slope test: after tiling, pour water anywhere — must flow to drain within 10 seconds. Redo any area that pools water.</li>
+        <li>Staircase steps: anti-skid nosing strip on every step edge — rounded, not sharp</li>
+        <li>All wall corners throughout house: bullnose corner bead during plastering — no 90-degree sharp corners</li>
+        <li>Tap test: after laying, tap each tile — hollow sound = not bonded = relay</li>
+        <li>Window sills: granite or Kota stone only — not ceramic tiles</li>
+      </ul>
+      <div class="sign-block">
+        <div class="sign-row">
+          <div class="sign-field"><label>Contractor Name</label><div class="line"></div></div>
+          <div class="sign-field"><label>Slope Test Date</label><div class="line"></div></div>
+          <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- ══ BRIEF 9 — PAINTER ══ -->
-<div class="brief" id="painter">
-<div class="brief-header" style="background:linear-gradient(135deg,#4a1d96,#2d1170);">
-  <div class="brief-icon">🎨</div>
-  <div class="brief-info"><h2>Brief for Painter</h2><p>Paint types, coats required, colour codes</p></div>
-</div>
-<div class="brief-body">
-  <div class="section-label">Paint Types Required</div>
-  <table>
-    <tr><th>Location</th><th>Paint Type Required</th><th>Minimum Coats</th></tr>
-    <tr><td>All external (outside) walls</td><td>Exterior weatherproof emulsion — must be rain and UV resistant. NOT interior paint used outside. Brand: Asian Paints Apex, Berger WeatherCoat, or equivalent.</td><td>1 coat exterior primer + 2 coats topcoat</td></tr>
-    <tr><td>Living room, bedroom, dining (dry areas)</td><td>Premium interior emulsion. Low VOC. We will specify colour per room with exact RGB/HEX code.</td><td>1 coat primer + 2 coats emulsion minimum</td></tr>
-    <tr><td>Kitchen walls and bathroom walls</td><td>Semi-gloss or satin finish interior emulsion — must be moisture resistant and washable (wipe-clean surface)</td><td>1 coat primer + 2 coats minimum</td></tr>
-    <tr><td>All ceilings</td><td>White ceiling paint — matte finish, washable</td><td>1 coat primer + 2 coats</td></tr>
-    <tr><td>Metal gates, grilles, window frames</td><td>Red oxide primer first, then enamel paint topcoat. Or epoxy-based paint for long life.</td><td>1 coat primer + 2 coats topcoat</td></tr>
-  </table>
-
-  <div class="section-label">Process Requirements</div>
-  <ul>
-    <li>All paint to be mixed in our presence — we will verify dilution level. No excessive water added to paint.</li>
-    <li>Surface preparation: all cracks filled with putty, all surfaces sanded smooth before painting begins</li>
-    <li>Putty coat (wall filler) required on all interior walls before primer — this creates smooth surface</li>
-    <li>Specific colour codes (RGB and HEX) will be given per room — we will provide a written list before painting begins</li>
-    <li>Do NOT start painting without our written colour confirmation for each room</li>
-    <li>Exterior walls: apply after full curing of plaster (minimum 28 days after plastering is complete)</li>
-    <li>Paint all edges and corners neatly — masking tape on adjacent surfaces before cutting in</li>
-  </ul>
-
-  <div class="sign-block">
-    <div class="sign-row">
-      <div class="sign-field"><label>Painter Name</label><div class="line"></div></div>
-      <div class="sign-field"><label>Paint Brand Agreed</label><div class="line"></div></div>
-      <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+  <!-- ══ PAINTER ══ -->
+  <div class="brief" id="brief-paint">
+    <div class="brief-header bh-paint">
+      <div class="brief-icon">🎨</div>
+      <div class="brief-info">
+        <div class="brief-role">Final Finishing Phase</div>
+        <h2>Painter</h2>
+        <p>Premium colours with exact RGB codes — correct paint for every surface</p>
+      </div>
+    </div>
+    <div class="brief-body">
+      <div class="section-label">Paint Type Per Location</div>
+      <table class="brief-table">
+        <tr><th>Location</th><th>Paint Type Required</th><th>Coats</th></tr>
+        <tr><td>All exterior walls</td><td>Exterior weather-resistant emulsion — NOT interior paint outside (Asian Paints Apex / Berger WeatherCoat)</td><td>1 primer + 2 coats</td></tr>
+        <tr><td>Living room, bedrooms</td><td>Premium interior emulsion, low VOC</td><td>1 primer + 2 coats</td></tr>
+        <tr><td>Kitchen and bathrooms</td><td>Semi-gloss or satin — moisture-resistant, washable</td><td>1 primer + 2 coats</td></tr>
+        <tr><td>All ceilings</td><td>White ceiling paint, matte washable</td><td>1 primer + 2 coats</td></tr>
+        <tr><td>Metal gates, grilles</td><td>Red oxide primer + enamel topcoat</td><td>1 primer + 2 coats</td></tr>
+      </table>
+      <div class="section-label">Process Rules</div>
+      <ul class="req-list">
+        <li>Mix all paint in our presence — we check consistency (not watery)</li>
+        <li>Putty coat on all interior walls before primer — creates smooth surface</li>
+        <li>Specific colour codes (HEX and RGB) will be given per room in writing before painting begins</li>
+        <li>Do NOT start any room without our written colour confirmation for that room</li>
+        <li>Apply exterior paint only after plaster has cured for minimum 28 days</li>
+      </ul>
+      <div class="sign-block">
+        <div class="sign-row">
+          <div class="sign-field"><label>Painter Name</label><div class="line"></div></div>
+          <div class="sign-field"><label>Paint Brand Agreed</label><div class="line"></div></div>
+          <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- ══ BRIEF 10 — KITCHEN / CARPENTER ══ -->
-<div class="brief" id="kitchen">
-<div class="brief-header" style="background:linear-gradient(135deg,#c8702a,#9a5220);">
-  <div class="brief-icon">🍳</div>
-  <div class="brief-info"><h2>Brief for Modular Kitchen and Carpenter</h2><p>Premium quality modular kitchen with soft-close, no sharp edges, suit-sized wardrobes</p></div>
-</div>
-<div class="brief-body">
-  <div class="section-label">Kitchen — Materials Required</div>
-  <table>
-    <tr><th>Component</th><th>Specification Required</th><th>Not Acceptable</th></tr>
-    <tr><td>Cabinet carcass (main body)</td><td>18mm BWR (Boiling Water Resistant) plywood — Grade 1 ISI marked</td><td>Particle board, MDF, or low-grade plywood for carcass</td></tr>
-    <tr><td>Drawer system</td><td>Blum Legrabox or Tandembox Antaro with Blumotion soft-close. OR Hettich InnoTech Atira with SilentSystem soft-close. Show us the brand label on hardware.</td><td>Generic or local brand drawers — even if claimed to be "same quality"</td></tr>
-    <tr><td>Door/drawer hinges</td><td>Blum Clip Top Blumotion soft-close hinges. OR Hettich Sensys soft-close hinges.</td><td>Unknown brand hinges</td></tr>
-    <tr><td>Countertop</td><td>Quartz stone (engineered), minimum 20mm thick. OR Granite, minimum 20mm thick.</td><td>Laminate countertop (scratches), any stone below 18mm thick</td></tr>
-    <tr><td>Countertop edge profile</td><td>Eased edge or pencil round on ALL edges — no sharp 90-degree edges on any countertop edge</td><td>Sharp 90-degree edge profile</td></tr>
-    <tr><td>Cabinet door/drawer face</td><td>HDF or MDF with lacquer, acrylic, or PVC film finish — moisture resistant, washable</td><td>Paper-wrapped low-density board, raw MDF without finish</td></tr>
-    <tr><td>Edge banding</td><td>2mm PVC edge banding with rounded profile on ALL exposed edges of all cabinets</td><td>Paper edge banding, no edge banding, or sharp edge profiles</td></tr>
-  </table>
-
-  <div class="section-label">No Sharp Edges — Mandatory Throughout</div>
-  <ul>
-    <li>Every countertop edge: eased (rounded) profile — no exceptions</li>
-    <li>Every cabinet door and drawer edge: PVC edge banding, rounded profile</li>
-    <li>Any protruding cabinet corner at eye/head height: add rounded aluminum corner profile</li>
-    <li>Kitchen wall corners: bullnose plaster corner (done by mason — confirm with mason before kitchen installation begins)</li>
-    <li>Under-wall-cabinet lower edge: filler strip with rounded profile</li>
-  </ul>
-
-  <div class="section-label">Wardrobe Requirements</div>
-  <ul>
-    <li>Full-length suit hanging section: hanging rail at minimum 185–190 cm height from floor. We have suits that need full-length hanging.</li>
-    <li>Total wardrobe height: 240 cm (floor to ceiling)</li>
-    <li>All wardrobe edges: same rounded PVC edge banding as kitchen</li>
-    <li>Soft-close hinges on all wardrobe doors (same brand as kitchen)</li>
-    <li>Integrated LED strip lighting inside wardrobes (door-activated switch)</li>
-    <li>Ventilated back panel to prevent moisture in Pokhara's humidity</li>
-  </ul>
-
-  <div class="req"><strong>⚠️ We Will Check:</strong> Hardware brand label on drawers and hinges. BWR marking on plywood cross-section. Countertop edge profile. We will test every drawer and door for soft-close function before final payment.</div>
-
-  <div class="sign-block">
-    <div class="sign-row">
-      <div class="sign-field"><label>Supplier / Carpenter Name</label><div class="line"></div></div>
-      <div class="sign-field"><label>Hardware Brand Confirmed</label><div class="line"></div></div>
-      <div class="sign-field"><label>Countertop Material Confirmed</label><div class="line"></div></div>
-      <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+  <!-- ══ KITCHEN / CARPENTER ══ -->
+  <div class="brief" id="brief-kitchen">
+    <div class="brief-header bh-kitchen">
+      <div class="brief-icon">🍳</div>
+      <div class="brief-info">
+        <div class="brief-role">Interiors Phase</div>
+        <h2>Modular Kitchen &amp; Carpenter</h2>
+        <p>Premium soft-close kitchen, rounded edges, suit-height wardrobes</p>
+      </div>
+    </div>
+    <div class="brief-body">
+      <div class="section-label">Kitchen Hardware — Specific Brands Required</div>
+      <ul class="req-list">
+        <li><strong>Drawer system:</strong> Blum Legrabox or Tandembox Antaro with Blumotion soft-close — OR — Hettich InnoTech Atira with SilentSystem. Show brand label on hardware.</li>
+        <li><strong>Door hinges:</strong> Blum Clip Top Blumotion soft-close — OR — Hettich Sensys. No generic or local brand alternatives.</li>
+        <li><strong>Cabinet carcass:</strong> 18mm BWR (Boiling Water Resistant) plywood, Grade 1 ISI marked. NOT particle board or MDF for carcass.</li>
+        <li><strong>Countertop:</strong> Quartz stone (engineered) minimum 20mm thick. OR granite minimum 20mm. NOT laminate countertop.</li>
+      </ul>
+      <div class="section-label">No Sharp Edges — Mandatory Throughout</div>
+      <ul class="req-list">
+        <li>Countertop: eased edge or pencil round profile on every edge — no sharp 90-degree countertop edges</li>
+        <li>All cabinet doors and drawers: 2mm radius PVC edge banding — rounded profile</li>
+        <li>Any protruding cabinet corner at head/elbow height: rounded aluminium corner profile</li>
+      </ul>
+      <div class="section-label">Wardrobe Requirements</div>
+      <ul class="req-list">
+        <li>Full-length suit hanging section: rail at 185–190 cm from floor (we are 6 feet 1 inch tall — suits must hang without touching floor)</li>
+        <li>Total wardrobe height: 240 cm — floor to ceiling</li>
+        <li>Same soft-close hinges on all wardrobe doors</li>
+        <li>LED strip inside wardrobes on door-activated switch</li>
+      </ul>
+      <div class="sign-block">
+        <div class="sign-row">
+          <div class="sign-field"><label>Supplier / Carpenter</label><div class="line"></div></div>
+          <div class="sign-field"><label>Hardware Brand Confirmed</label><div class="line"></div></div>
+          <div class="sign-field"><label>Countertop Material</label><div class="line"></div></div>
+          <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
 
-<!-- ══ BRIEF 11 — WINDOW SUPPLIER ══ -->
-<div class="brief" id="window">
-<div class="brief-header" style="background:linear-gradient(135deg,#065f46,#047857);">
-  <div class="brief-icon">🪟</div>
-  <div class="brief-info"><h2>Brief for Window and Door Supplier</h2><p>UPVC windows, sizes, mosquito mesh, and glass specifications</p></div>
-</div>
-<div class="brief-body">
-  <div class="section-label">Window and Door Sizes Required</div>
-  <table>
-    <tr><th>Opening</th><th>Size Required</th><th>Type</th></tr>
-    <tr><td>Main entrance door</td><td>1200mm wide × 2100mm tall</td><td>Solid wood or engineered wood, no sharp frame edges</td></tr>
-    <tr><td>All bedroom doors</td><td>1000mm wide × 2100mm tall</td><td>Solid core door, rounded frame (pencil round profile)</td></tr>
-    <tr><td>Bathroom doors</td><td>900mm wide × 2100mm tall</td><td>Waterproof door (PVC core or solid wood with waterproof paint)</td></tr>
-    <tr><td>Living room windows</td><td>1500mm wide × 1350mm tall</td><td>UPVC casement or sliding</td></tr>
-    <tr><td>Bedroom windows</td><td>1200mm wide × 1200mm tall, sill at 750mm from floor</td><td>UPVC casement preferred (better seal for dust)</td></tr>
-    <tr><td>Kitchen window</td><td>1050mm wide × 900mm tall</td><td>UPVC casement above counter</td></tr>
-    <tr><td>Bathroom window</td><td>600mm wide × 600mm tall, at 1800mm height from floor</td><td>Frosted glass, fixed or top-hung</td></tr>
-    <tr><td>Staircase window</td><td>900mm wide × 1800mm tall</td><td>Fixed or side-hinged, clear glass</td></tr>
-  </table>
-
-  <div class="section-label">UPVC Window Specifications</div>
-  <ul>
-    <li>Profile: UPVC with thermal break (or minimum standard UPVC — thermal break preferred for Pokhara's climate)</li>
-    <li>Glass: minimum 5mm clear glass. Road-facing windows: 5+9+5mm double-glazed glass for noise reduction (optional upgrade, preferred)</li>
-    <li>Hardware: stainless steel hinges, handles, and locks — not zinc alloy (zinc corrodes in Pokhara's humidity)</li>
-    <li>Rubber seal: EPDM rubber gasket all around frame — for dust and rain seal</li>
-    <li><strong>Mosquito mesh: integrated retractable fiberglass mesh required on ALL windows — no exceptions. This must be included in the supply price.</strong></li>
-    <li>All window frame edges: no sharp external corners — use rounded/chamfered profile</li>
-    <li>Warranty: minimum 10 years on UPVC profile, minimum 5 years on hardware</li>
-  </ul>
-
-  <div class="section-label">Installation Requirements</div>
-  <ul>
-    <li>All frames set in waterproof mortar</li>
-    <li>Silicone sealant bead applied all around frame both inside and outside after installation</li>
-    <li>Window sill in granite or Kota stone (not tiles) — sloped outward with drip edge</li>
-  </ul>
-
-  <div class="sign-block">
-    <div class="sign-row">
-      <div class="sign-field"><label>Supplier Name</label><div class="line"></div></div>
-      <div class="sign-field"><label>UPVC Profile Brand</label><div class="line"></div></div>
-      <div class="sign-field"><label>Mesh Included (Yes/No)</label><div class="line"></div></div>
-      <div class="sign-field"><label>Delivery / Installation Date</label><div class="line"></div></div>
-      <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+  <!-- ══ WINDOW SUPPLIER ══ -->
+  <div class="brief" id="brief-window">
+    <div class="brief-header bh-window">
+      <div class="brief-icon">🪟</div>
+      <div class="brief-info">
+        <div class="brief-role">Structure Phase — Before Walls Finished</div>
+        <h2>Window &amp; Door Supplier</h2>
+        <p>UPVC windows with mesh, correct sizes, granite window sills</p>
+      </div>
+    </div>
+    <div class="brief-body">
+      <div class="section-label">Sizes Required</div>
+      <table class="brief-table">
+        <tr><th>Opening</th><th>Size</th><th>Type</th></tr>
+        <tr><td>Main entrance door</td><td>1200mm × 2100mm</td><td>Solid door, rounded frame profile</td></tr>
+        <tr><td>All bedroom doors</td><td>1000mm × 2100mm</td><td>Solid core, rounded frame</td></tr>
+        <tr><td>Bathroom doors</td><td>900mm × 2100mm</td><td>Waterproof door</td></tr>
+        <tr><td>Living room windows</td><td>1500mm × 1350mm</td><td>UPVC casement or sliding</td></tr>
+        <tr><td>Bedroom windows</td><td>1200mm × 1200mm, sill at 750mm</td><td>UPVC casement preferred</td></tr>
+        <tr><td>Kitchen window</td><td>1050mm × 900mm</td><td>UPVC casement</td></tr>
+        <tr><td>Bathroom window</td><td>600mm × 600mm, at 1800mm height</td><td>Frosted glass</td></tr>
+        <tr><td>Staircase window</td><td>900mm × 1800mm</td><td>Clear glass, fixed or hinged</td></tr>
+      </table>
+      <div class="section-label">Specifications Required</div>
+      <ul class="req-list">
+        <li>UPVC profile — thermal break preferred</li>
+        <li><strong>Integrated retractable fiberglass mosquito mesh on ALL windows — no exceptions — must be included in supply price</strong></li>
+        <li>Glass: minimum 5mm clear. Road-facing rooms: 5+9+5mm double-glazed recommended</li>
+        <li>Hardware: stainless steel handles and hinges — not zinc alloy (corrodes in Pokhara humidity)</li>
+        <li>EPDM rubber seal all around every frame</li>
+        <li>Silicone sealant bead at frame-to-wall junction inside and outside after installation</li>
+        <li>Window sills in granite or Kota stone — NOT ceramic tiles — sloped outward</li>
+        <li>All frame and door corners: rounded profile — no sharp 90-degree edges</li>
+        <li>Warranty: 10 years profile, 5 years hardware minimum</li>
+      </ul>
+      <div class="sign-block">
+        <div class="sign-row">
+          <div class="sign-field"><label>Supplier Name</label><div class="line"></div></div>
+          <div class="sign-field"><label>UPVC Profile Brand</label><div class="line"></div></div>
+          <div class="sign-field"><label>Mesh Included (Yes/No)</label><div class="line"></div></div>
+          <div class="sign-field"><label>Delivery / Install Date</label><div class="line"></div></div>
+          <div class="sign-field"><label>Signature</label><div class="line"></div></div>
+        </div>
+      </div>
     </div>
   </div>
-</div>
-</div>
-
-<!-- FOOTER -->
-<div style="text-align:center;color:#9ca3af;font-size:12px;margin-top:40px;padding-top:16px;border-top:1px solid #e5e7eb;">
-  <p>📋 Professional Briefs — Pokhara 30×60 House | Keep one copy. Give one copy to each professional.</p>
-  <p style="margin-top:4px;">These briefs set out minimum expectations. The full guide and checklist is in the main House Building Website document.</p>
-</div>
-
-
 
 </main>
 <script src="js/app.js"></script>
