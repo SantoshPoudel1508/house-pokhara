@@ -1,32 +1,27 @@
 // ═══════════════════════════════════════════════════════════
-//  FIREBASE CONFIGURATION
-//  Replace the values below with your own Firebase project.
-//  Follow the steps in budget.html to set this up.
+//  FIREBASE CONFIGURATION — house-pokhara project
 // ═══════════════════════════════════════════════════════════
 
 const FIREBASE_CONFIG = {
-  apiKey:            "YOUR_API_KEY",
-  authDomain:        "YOUR_PROJECT_ID.firebaseapp.com",
-  projectId:         "YOUR_PROJECT_ID",
-  storageBucket:     "YOUR_PROJECT_ID.appspot.com",
-  messagingSenderId: "YOUR_SENDER_ID",
-  appId:             "YOUR_APP_ID"
+  apiKey:            "AIzaSyAW8h8KE4mzjnOaE507tBOVPKSu8CGwCc4",
+  authDomain:        "house-pokhara.firebaseapp.com",
+  projectId:         "house-pokhara",
+  storageBucket:     "house-pokhara.firebasestorage.app",
+  messagingSenderId: "987044951918",
+  appId:             "1:987044951918:web:2b7063a7f0bbad4259737f",
+  measurementId:     "G-TJ1BHV6GG8"
 };
 
 // ── Allowed editor emails ───────────────────────────────────
-// Only these email addresses can ADD or EDIT expenses.
-// Anyone can VIEW the budget page without logging in.
-// Add the Gmail addresses of people who should be able to edit.
+// Only these Gmail accounts can ADD, EDIT, or DELETE expenses.
+// Everyone else can VIEW the budget page without logging in.
 const ALLOWED_EDITORS = [
-  "your-email@gmail.com",
-  // "father-email@gmail.com",
-  // add more emails here
+  "santoshpoudel15@gmail.com",
+  "pavitrapoudel9287@gmail.com",
 ];
 
-// ── Currency Settings ───────────────────────────────────────
-// This is the default conversion rate: 1 INR = X NPR
-// The app will try to fetch a live rate, but this is the fallback.
+// ── Default conversion rate: 1 INR = X NPR ─────────────────
 const DEFAULT_INR_TO_NPR = 1.60;
 
-// ── Is Firebase configured? ─────────────────────────────────
+// ── Config status check ─────────────────────────────────────
 const IS_FIREBASE_READY = !FIREBASE_CONFIG.apiKey.includes('YOUR_');
