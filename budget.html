@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Budget Tracker | House Guide — Pokhara 30×60</title>
+<link rel="stylesheet" href="css/style.css"/>
+<style>
+  /* Cat filter buttons */
+  .cat-filter-btn {
+    padding: 5px 13px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    background: transparent; border: 1.5px solid; cursor: pointer;
+    transition: all .15s; color: var(--muted); border-color: var(--border);
+  }
+  .cat-filter-btn.active, .cat-filter-btn:hover { opacity: 1; }
+  .cat-filter-btn.active { filter: brightness(1); background: var(--accent); color: #fff !important; border-color: var(--accent) !important; }
+  #catFilters { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0; }
+  .section-head { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-dark); margin: 22px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--accent-border); display: flex; align-items: center; justify-content: space-between; }
+  .empty-state { text-align: center; padding: 50px 20px; color: var(--muted); }
+  .empty-state .es-icon { font-size: 48px; margin-bottom: 12px; }
+  .empty-state h3 { font-size: 16px; font-weight: 700; color: var(--text-soft); margin-bottom: 6px; }
+  .empty-state h3::before { display: none; }
+</style>
+</head>
+<body data-page="budget">
+
+<!-- FIREBASE SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+
+<div class="topbar">
+  <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+  <span class="site-name">🏡 <span class="hl">House Guide</span> — Pokhara</span>
+  <div class="progress-wrap">
+    <div class="bar-bg"><div class="bar-fill" id="progressBar" style="width:0%"></div></div>
+    <span class="bar-text" id="progressText">0 of 0</span>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨 Print</button>
+  <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+</div>
+
+<div class="sidebar-overlay"></div>
+
+<div class="sidebar" id="sidebar">
+  <div class="nav-section">Overview</div>
+  <a href="index.html"><span class="nav-icon">🏡</span><span class="nav-label">Home</span><span class="nav-check"></span></a>
+  <div class="divider"></div>
+  <div class="nav-section">Construction Phases</div>
+  <a href="phase-0.html"  data-page="phase-0" ><span class="nav-icon">📋</span><span class="nav-label">Phase 0 — Planning</span><span class="nav-check"></span></a>
+  <a href="phase-1.html"  data-page="phase-1" ><span class="nav-icon">🏗️</span><span class="nav-label">Phase 1 — Foundation</span><span class="nav-check"></span></a>
+  <a href="phase-2.html"  data-page="phase-2" ><span class="nav-icon">🧱</span><span class="nav-label">Phase 2 — Structure</span><span class="nav-check"></span></a>
+  <a href="phase-3.html"  data-page="phase-3" ><span class="nav-icon">💧</span><span class="nav-label">Phase 3 — Plumbing</span><span class="nav-check"></span></a>
+  <a href="phase-4.html"  data-page="phase-4" ><span class="nav-icon">⚡</span><span class="nav-label">Phase 4 — Electrical</span><span class="nav-check"></span></a>
+  <a href="phase-5.html"  data-page="phase-5" ><span class="nav-icon">🛡️</span><span class="nav-label">Phase 5 — Waterproofing</span><span class="nav-check"></span></a>
+  <a href="phase-6.html"  data-page="phase-6" ><span class="nav-icon">🪟</span><span class="nav-label">Phase 6 — Windows</span><span class="nav-check"></span></a>
+  <a href="phase-7.html"  data-page="phase-7" ><span class="nav-icon">🔲</span><span class="nav-label">Phase 7 — Flooring</span><span class="nav-check"></span></a>
+  <a href="phase-8.html"  data-page="phase-8" ><span class="nav-icon">🎨</span><span class="nav-label">Phase 8 — Paint</span><span class="nav-check"></span></a>
+  <a href="phase-9.html"  data-page="phase-9" ><span class="nav-icon">🍳</span><span class="nav-label">Phase 9 — Kitchen</span><span class="nav-check"></span></a>
+  <a href="phase-10.html" data-page="phase-10"><span class="nav-icon">🚿</span><span class="nav-label">Phase 10 — Bathrooms</span><span class="nav-check"></span></a>
+  <a href="phase-11.html" data-page="phase-11"><span class="nav-icon">🛋️</span><span class="nav-label">Phase 11 — Interiors</span><span class="nav-check"></span></a>
+  <a href="phase-12.html" data-page="phase-12"><span class="nav-icon">🌿</span><span class="nav-label">Phase 12 — Outdoor</span><span class="nav-check"></span></a>
+  <div class="divider"></div>
+  <div class="nav-section">Reference</div>
+  <a href="scams.html"     data-page="scams"    ><span class="nav-icon">🚫</span><span class="nav-label">Scam Guard</span><span class="nav-check"></span></a>
+  <a href="questions.html" data-page="questions"><span class="nav-icon">❓</span><span class="nav-label">Questions Guide</span><span class="nav-check"></span></a>
+  <a href="briefs.html"                         ><span class="nav-icon">📄</span><span class="nav-label">Professional Briefs</span><span class="nav-check"></span></a>
+  <div class="divider"></div>
+  <a href="budget.html" class="active"><span class="nav-icon">💰</span><span class="nav-label">Budget Tracker</span><span class="nav-check"></span></a>
+</div>
+
+<main class="main" id="budgetMain">
+  <div class="page-header">
+    <div class="phase-tag">💰 Budget Tracker</div>
+    <h1>House Budget &amp; Expense Tracker</h1>
+    <div class="subtitle">Track all construction expenses in INR or NPR. Data is stored in the cloud and visible to everyone, but only authorised people can add expenses.</div>
+    <div class="nav-btns">
+      <a class="nav-btn" href="index.html">← Home</a>
+    </div>
+  </div>
+
+  <!-- HERO WITH AUTH + CURRENCY -->
+  <div class="budget-hero">
+    <div class="bh-info">
+      <h2>💰 Construction Budget</h2>
+      <p>All amounts sync instantly across all devices. Sign in with Google to add expenses.</p>
+      <div style="margin-top:10px;font-size:12px;opacity:.6;" id="rateDisplay">1 INR = 1.60 NPR</div>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;">
+      <div id="authArea"><!-- Rendered by JS --></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
+        <div class="currency-toggle">
+          <button data-cur="NPR" onclick="setCurrency('NPR')" class="active">NPR</button>
+          <button data-cur="INR" onclick="setCurrency('INR')">INR</button>
+        </div>
+        <button id="setBudgetBtn" class="login-btn" onclick="openBudgetModal()" style="display:none;">⚙ Set Budget</button>
+        <button id="addExpenseBtn" class="add-expense-btn" onclick="openModal()" style="display:none;">+ Add Expense</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="budget-stats">
+    <div class="bstat">
+      <div class="bstat-label">Total Budget</div>
+      <div class="bstat-value" id="statBudget">Not set</div>
+      <div class="bstat-sub">Target construction cost</div>
+    </div>
+    <div class="bstat">
+      <div class="bstat-label">Total Spent</div>
+      <div class="bstat-value" id="statSpent">NPR 0</div>
+      <div class="bstat-sub">All recorded expenses</div>
+      <div style="background:var(--border);border-radius:20px;height:4px;margin-top:8px;">
+        <div id="spentBar" style="width:0%;height:4px;background:var(--progress-fill);border-radius:20px;transition:width .6s;"></div>
+      </div>
+    </div>
+    <div class="bstat good-stat">
+      <div class="bstat-label">Remaining</div>
+      <div class="bstat-value" id="statRemaining">—</div>
+      <div class="bstat-sub">Budget left to spend</div>
+    </div>
+    <div class="bstat">
+      <div class="bstat-label">Budget Used</div>
+      <div class="bstat-value" id="statPct">—</div>
+      <div class="bstat-sub">Percentage of total budget</div>
+    </div>
+  </div>
+
+  <!-- CATEGORY FILTERS -->
+  <div class="section-head">
+    <span>Filter by Category</span>
+  </div>
+  <div id="catFilters"></div>
+
+  <!-- EXPENSE LIST -->
+  <div class="section-head">
+    <span>All Expenses</span>
+  </div>
+  <div id="expenseList">
+    <div class="empty-state">
+      <div class="es-icon">💸</div>
+      <h3>No expenses recorded yet</h3>
+      <p>Sign in and click "Add Expense" to start tracking your construction costs.</p>
+    </div>
+  </div>
+
+  <!-- PHASE BREAKDOWN CHART -->
+  <div class="section-head" style="margin-top:30px;">
+    <span>Spending by Category</span>
+  </div>
+  <div id="phaseChart" style="margin:14px 0;">
+    <p style="color:var(--muted);font-size:13.5px;">Chart will appear once expenses are added.</p>
+  </div>
+
+</main>
+
+<!-- ═══ ADD EXPENSE MODAL ═══ -->
+<div class="modal-bg" id="expenseModal">
+  <div class="modal">
+    <h3>➕ Add New Expense</h3>
+    <form id="expenseForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Amount</label>
+          <input type="number" id="expAmount" placeholder="0" min="1" required/>
+        </div>
+        <div class="form-group">
+          <label>Currency</label>
+          <select id="expCurrency">
+            <option value="NPR">NPR — Nepalese Rupee</option>
+            <option value="INR">INR — Indian Rupee (₹)</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="expCategory" required>
+          <option value="">Select category...</option>
+          <option value="planning">Planning &amp; Permits</option>
+          <option value="foundation">Foundation &amp; Soil Test</option>
+          <option value="structure">Structure (Columns, Beams, Slab)</option>
+          <option value="plumbing">Plumbing</option>
+          <option value="electrical">Electrical</option>
+          <option value="waterproofing">Waterproofing</option>
+          <option value="windows">Windows &amp; Doors</option>
+          <option value="flooring">Flooring &amp; Tiles</option>
+          <option value="paint">Paint &amp; Plastering</option>
+          <option value="kitchen">Kitchen &amp; Wardrobes</option>
+          <option value="bathrooms">Bathrooms &amp; Fittings</option>
+          <option value="interiors">Interiors &amp; Furniture</option>
+          <option value="outdoor">Outdoor &amp; Garden</option>
+          <option value="labour">Labour &amp; Wages</option>
+          <option value="misc">Miscellaneous</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Description</label>
+        <input type="text" id="expDesc" placeholder="e.g. TMT Steel bars 10mm — 200kg" required/>
+      </div>
+      <div class="form-group">
+        <label>Date</label>
+        <input type="date" id="expDate" required/>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn-primary">💾 Save Expense</button>
+        <button type="button" class="btn-secondary" onclick="closeModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ═══ SET BUDGET MODAL ═══ -->
+<div class="modal-bg" id="budgetModal">
+  <div class="modal">
+    <h3>⚙️ Set Total Budget</h3>
+    <form id="budgetForm">
+      <div class="form-row">
+        <div class="form-group">
+          <label>Total Budget Amount</label>
+          <input type="number" id="budgetAmount" placeholder="0" min="1" required/>
+        </div>
+        <div class="form-group">
+          <label>Currency</label>
+          <select id="budgetCurrency">
+            <option value="NPR">NPR</option>
+            <option value="INR">INR</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Conversion Rate (1 INR = ? NPR)</label>
+        <input type="number" id="convRate" placeholder="1.60" step="0.01" min="0.1"/>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">Current approximate rate: 1 INR ≈ 1.60 NPR. Update if the rate has changed.</div>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn-primary">💾 Save Budget</button>
+        <button type="button" class="btn-secondary" onclick="closeBudgetModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/budget.js"></script>
+</body>
+</html>
