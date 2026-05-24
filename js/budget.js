@@ -12,6 +12,7 @@ let totalBudgetNPR = 0;
 let isEditor = false;
 let unsubscribeExpenses = null;
 let unsubscribeSettings = null;
+let editingId = null; // null = new, string = editing existing
 
 // ── Categories ────────────────────────────────────────────
 const CATEGORIES = [
@@ -261,14 +262,17 @@ function renderExpenses() {
     const cat = catById(e.category);
     const amt = viewCurrency === 'NPR' ? e.amountNPR : toINR(e.amountNPR);
     return `
-      <div class="expense-item" style="${i < 3 ? 'border-left:3px solid var(--accent);' : ''}">
-        <div class="expense-cat-dot" style="background:${cat.color}"></div>
+      <div class="expense-item" style="border-left:4px solid ${cat.color};">
         <div class="expense-info">
           <div class="expense-desc">${e.description || 'Expense'}</div>
-          <div class="expense-meta">${cat.label} · ${e.date || ''} · ${e.addedByName || e.addedBy || ''}</div>
+          <div class="expense-meta" style="display:flex;align-items:center;gap:6px;margin-top:2px;">
+            <span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:${cat.color};flex-shrink:0;"></span>
+            ${cat.label} · ${e.date || ''} · ${e.addedByName || e.addedBy || ''}
+          </div>
         </div>
         <div class="expense-amount">${sym(viewCurrency)} ${new Intl.NumberFormat('en-IN',{maximumFractionDigits:0}).format(amt)}</div>
         <div class="expense-actions">
+          <button onclick="editExpense('${e.id}')" title="Edit expense" style="color:var(--accent-dark);">✏️</button>
           <button onclick="deleteExpense('${e.id}')" title="Delete expense">🗑</button>
         </div>
       </div>`;
@@ -355,11 +359,35 @@ function getNPTDate() {
   const nptMs  = utcMs + (5 * 60 + 45) * 60000;
   return new Date(nptMs).toISOString().split('T')[0];
 }
-function openModal()  {
-  document.getElementById('expenseModal').classList.add('open');
-  document.getElementById('expDate').value = getNPTDate();
+function openModal(expense) {
+  editingId = expense ? expense.id : null;
+  const modal  = document.getElementById('expenseModal');
+  const title  = modal.querySelector('h3');
+  const btn    = modal.querySelector('button[type=submit]');
+  modal.classList.add('open');
+
+  if (expense) {
+    // Pre-fill all fields for editing
+    document.getElementById('expAmount').value   = expense.amount || '';
+    document.getElementById('expCurrency').value = expense.currency || 'NPR';
+    document.getElementById('expCategory').value = expense.category || '';
+    document.getElementById('expDesc').value     = expense.description || '';
+    document.getElementById('expDate').value     = expense.date || getNPTDate();
+    if (title) title.textContent = '✏️ Edit Expense';
+    if (btn)   btn.textContent   = '💾 Update Expense';
+  } else {
+    document.getElementById('expenseForm').reset();
+    document.getElementById('expDate').value = getNPTDate();
+    if (title) title.textContent = '➕ Add New Expense';
+    if (btn)   btn.textContent   = '💾 Save Expense';
+  }
 }
-function closeModal() { document.getElementById('expenseModal').classList.remove('open'); }
+
+function editExpense(id) {
+  const e = expenses.find(x => x.id === id);
+  if (e) openModal(e);
+}
+function closeModal() { document.getElementById('expenseModal').classList.remove('open'); editingId = null; }
 
 // ── Set budget modal ───────────────────────────────────────
 function openBudgetModal()  {
@@ -405,23 +433,38 @@ document.addEventListener('DOMContentLoaded', () => {
       btn.disabled    = true;
       btn.textContent = 'Saving...';
       try {
-        await db.collection('expenses').add({
-          amount, currency, amountNPR,
-          amountINR:   currency === 'INR' ? amount : toINR(amountNPR),
-          category:    cat,
-          description: desc,
-          date,
-          addedBy:     currentUser.email,
-          addedByName: currentUser.displayName || currentUser.email,
-          createdAt:   firebase.firestore.FieldValue.serverTimestamp()
-        });
+        if (editingId) {
+          // Update existing document
+          await db.collection('expenses').doc(editingId).update({
+            amount, currency, amountNPR,
+            amountINR:      currency === 'INR' ? amount : toINR(amountNPR),
+            category:       cat,
+            description:    desc,
+            date,
+            lastEditedBy:   currentUser.email,
+            lastEditedAt:   firebase.firestore.FieldValue.serverTimestamp()
+          });
+        } else {
+          // Create new document
+          await db.collection('expenses').add({
+            amount, currency, amountNPR,
+            amountINR:   currency === 'INR' ? amount : toINR(amountNPR),
+            category:    cat,
+            description: desc,
+            date,
+            addedBy:     currentUser.email,
+            addedByName: currentUser.displayName || currentUser.email,
+            createdAt:   firebase.firestore.FieldValue.serverTimestamp()
+          });
+        }
+        editingId = null;
         form.reset();
         closeModal();
       } catch (err) {
         alert('Error saving expense: ' + err.message);
       } finally {
         btn.disabled    = false;
-        btn.textContent = '💾 Save Expense';
+        btn.textContent = editingId ? '💾 Update Expense' : '💾 Save Expense';
       }
     });
   }
