@@ -456,9 +456,10 @@ document.addEventListener('DOMContentLoaded', () => {
   // Category filter buttons
   const filterWrap = document.getElementById('catFilters');
   if (filterWrap) {
+    const sortedCats = [...CATEGORIES].sort((a,b) => a.label.localeCompare(b.label));
     filterWrap.innerHTML =
       `<button class="cat-filter-btn active" data-cat="" onclick="setFilter('')">All</button>` +
-      CATEGORIES.map(c =>
+      sortedCats.map(c =>
         `<button class="cat-filter-btn" data-cat="${c.id}" onclick="setFilter('${c.id}')" style="border-color:${c.color};color:${c.color};">${c.label}</button>`
       ).join('');
   }
