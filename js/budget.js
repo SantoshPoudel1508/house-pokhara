@@ -248,24 +248,114 @@ function renderExpenses() {
   }).join('');
 }
 
-// ── Category chart ─────────────────────────────────────────
+// ── Category chart (doughnut + scaled bars) ───────────────
+let doughnutChart = null;
+
 function renderPhaseChart() {
-  const chartEl = document.getElementById('phaseChart');
-  if (!chartEl) return;
+  const chartEl  = document.getElementById('phaseChart');
+  const canvas   = document.getElementById('doughnutChart');
+  const legendEl = document.getElementById('chartLegend');
+  if (!chartEl || !canvas) return;
+
+  // Calculate totals per category (only non-zero)
   const totals = {};
   expenses.forEach(e => { totals[e.category] = (totals[e.category] || 0) + (e.amountNPR || 0); });
-  const max = Math.max(...Object.values(totals), 1);
-  chartEl.innerHTML = CATEGORIES.map(cat => {
-    const val = totals[cat.id] || 0;
-    if (!val) return '';
-    const pct = Math.round(val / max * 100);
-    return `
-      <div class="phase-bar-item">
-        <div class="phase-bar-label">${cat.label}</div>
-        <div class="phase-bar-track"><div class="phase-bar-fill" style="width:${pct}%;background:${cat.color}"></div></div>
-        <div class="phase-bar-val">${sym(viewCurrency)} ${fmt(val, viewCurrency)}</div>
+  const active = CATEGORIES.filter(c => (totals[c.id] || 0) > 0);
+
+  if (active.length === 0) {
+    chartEl.innerHTML = '<p style="color:var(--muted);font-size:13.5px;">Add expenses to see the breakdown.</p>';
+    if (doughnutChart) { doughnutChart.destroy(); doughnutChart = null; }
+    canvas.style.display = 'none';
+    if (legendEl) legendEl.innerHTML = '';
+    return;
+  }
+
+  canvas.style.display = 'block';
+  const totalSpent = active.reduce((s, c) => s + totals[c.id], 0);
+  const labels  = active.map(c => c.label);
+  const data    = active.map(c => totals[c.id]);
+  const colors  = active.map(c => c.color);
+
+  // ── Doughnut chart ──
+  if (doughnutChart) {
+    doughnutChart.data.labels                  = labels;
+    doughnutChart.data.datasets[0].data        = data;
+    doughnutChart.data.datasets[0].backgroundColor = colors;
+    doughnutChart.update('active');
+  } else {
+    doughnutChart = new Chart(canvas, {
+      type: 'doughnut',
+      data: {
+        labels,
+        datasets: [{
+          data, backgroundColor: colors,
+          borderWidth: 2,
+          borderColor: 'var(--card)',
+          hoverOffset: 8,
+        }]
+      },
+      options: {
+        responsive: false,
+        cutout: '68%',
+        plugins: {
+          legend: { display: false },
+          tooltip: {
+            callbacks: {
+              label: ctx => {
+                const val = ctx.raw;
+                const pct = Math.round(val / totalSpent * 100);
+                return ` ${sym(viewCurrency)} ${fmt(val, viewCurrency)}  (${pct}%)`;
+              }
+            }
+          }
+        }
+      }
+    });
+  }
+
+  // ── Custom legend ──
+  if (legendEl) {
+    legendEl.innerHTML = active.map(c => {
+      const pct = Math.round(totals[c.id] / totalSpent * 100);
+      return `<div style="display:flex;align-items:center;gap:7px;margin:5px 0;font-size:12px;">
+        <span style="width:10px;height:10px;border-radius:3px;background:${c.color};flex-shrink:0;"></span>
+        <span style="flex:1;color:var(--text-soft);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">${c.label}</span>
+        <span style="font-weight:700;color:var(--text);font-size:11px;">${pct}%</span>
       </div>`;
-  }).filter(Boolean).join('') || '<p style="color:var(--muted);font-size:13.5px;">No expenses recorded yet.</p>';
+    }).join('');
+  }
+
+  // ── Horizontal bars (scaled by value — biggest = full width) ──
+  const maxVal = Math.max(...data);
+  chartEl.innerHTML = active.map(c => {
+    const val    = totals[c.id];
+    const pct    = Math.round(val / maxVal * 100);   // relative to max category
+    const share  = Math.round(val / totalSpent * 100); // share of total
+    return `
+      <div style="margin:10px 0;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:5px;">
+          <span style="font-size:13px;color:var(--text-soft);display:flex;align-items:center;gap:6px;">
+            <span style="width:9px;height:9px;border-radius:2px;background:${c.color};display:inline-block;"></span>
+            ${c.label}
+          </span>
+          <span style="font-size:12.5px;font-weight:700;color:var(--text);">${sym(viewCurrency)} ${fmt(val, viewCurrency)}</span>
+        </div>
+        <div style="background:var(--border);border-radius:20px;height:10px;overflow:hidden;">
+          <div style="
+            width:${pct}%;height:10px;border-radius:20px;
+            background:${c.color};
+            transition:width .6s ease;
+            position:relative;
+          ">
+            <span style="
+              position:absolute;right:6px;top:50%;transform:translateY(-50%);
+              font-size:9px;font-weight:800;color:#fff;white-space:nowrap;
+              display:${pct > 20 ? 'block' : 'none'};
+            ">${share}%</span>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
 }
 
 // ── Currency toggle ────────────────────────────────────────
@@ -276,6 +366,8 @@ function setCurrency(cur) {
   );
   renderStats();
   renderExpenses();
+  // Destroy chart so it rebuilds with new currency amounts in tooltips
+  if (doughnutChart) { doughnutChart.destroy(); doughnutChart = null; }
   renderPhaseChart();
 }
 
