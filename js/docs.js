@@ -5,14 +5,21 @@
 ═══════════════════════════════════════════════════════════ */
 
 const DOC_CATEGORIES = [
-  { id:'land',         label:'Land & Property',       icon:'🏛️',  color:'#C8702A' },
-  { id:'legal',        label:'Legal Documents',        icon:'⚖️',  color:'#4A6EA8' },
-  { id:'municipal',    label:'Municipal & Government', icon:'🏛️',  color:'#5F8269' },
-  { id:'construction', label:'Construction & Design',  icon:'🏗️',  color:'#8C4A22' },
-  { id:'bills',        label:'Bills & Receipts',       icon:'🧾',  color:'#C48A18' },
-  { id:'insurance',    label:'Insurance',              icon:'🛡️',  color:'#059669' },
-  { id:'contracts',    label:'Contracts & Agreements', icon:'📜',  color:'#7C3AED' },
-  { id:'other',        label:'Other Documents',        icon:'📄',  color:'#78716C' },
+  { id:'land',         label:'Land & Property',        icon:'🏛️', color:'#C8702A' },
+  { id:'municipal',    label:'Municipal & Permits',     icon:'🏢', color:'#5F8269' },
+  { id:'legal',        label:'Legal Documents',         icon:'⚖️', color:'#4A6EA8' },
+  { id:'contracts',    label:'Contracts & Agreements',  icon:'📜', color:'#7C3AED' },
+  { id:'technical',    label:'Technical Reports',       icon:'🔬', color:'#1E3040' },
+  { id:'drawings',     label:'Drawings & Plans',        icon:'📐', color:'#2D5C3C' },
+  { id:'photos',       label:'Photos & Site Progress',  icon:'📸', color:'#C46428' },
+  { id:'quotations',   label:'Quotations & Estimates',  icon:'📊', color:'#0891B2' },
+  { id:'bills',        label:'Bills & Receipts',        icon:'🧾', color:'#C48A18' },
+  { id:'payments',     label:'Contractor Payments',     icon:'💳', color:'#8C4A22' },
+  { id:'bank',         label:'Bank & Finance',          icon:'🏦', color:'#374151' },
+  { id:'warranties',   label:'Warranties & Certificates',icon:'🏆',color:'#059669' },
+  { id:'insurance',    label:'Insurance',               icon:'🛡️', color:'#16A34A' },
+  { id:'utilities',    label:'Utility Connections',     icon:'⚡', color:'#6B7280' },
+  { id:'other',        label:'Other Documents',         icon:'📄', color:'#78716C' },
 ];
 
 let docDb, docAuth;
