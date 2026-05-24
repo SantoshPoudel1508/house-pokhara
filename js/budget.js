@@ -15,6 +15,7 @@ let unsubscribeSettings = null;
 
 // ── Categories ────────────────────────────────────────────
 const CATEGORIES = [
+  // ── Construction Phases ──
   { id:'planning',      label:'Planning & Permits',        color:'#5A7EB8' },
   { id:'foundation',    label:'Foundation & Soil',         color:'#8C4A22' },
   { id:'structure',     label:'Structure (Columns/Beams)', color:'#3A6248' },
@@ -23,12 +24,27 @@ const CATEGORIES = [
   { id:'waterproofing', label:'Waterproofing',             color:'#1E3040' },
   { id:'windows',       label:'Windows & Doors',           color:'#2D5C3C' },
   { id:'flooring',      label:'Flooring & Tiles',          color:'#7A5A18' },
-  { id:'paint',         label:'Paint',                     color:'#643A96' },
+  { id:'paint',         label:'Paint & Plastering',        color:'#643A96' },
   { id:'kitchen',       label:'Kitchen & Wardrobes',       color:'#C8702A' },
-  { id:'bathrooms',     label:'Bathrooms',                 color:'#4A8A5A' },
+  { id:'bathrooms',     label:'Bathrooms & Fittings',      color:'#4A8A5A' },
   { id:'interiors',     label:'Interiors & Furniture',     color:'#A8685C' },
   { id:'outdoor',       label:'Outdoor & Garden',          color:'#3D7A50' },
+  // ── People ──
   { id:'labour',        label:'Labour & Wages',            color:'#7A3828' },
+  { id:'professionals', label:'Professional Fees',         color:'#4A5A8A' },
+  // ── Operational ──
+  { id:'travel',        label:'Travel & Transport',        color:'#2E7DAF' },
+  { id:'food',          label:'Food & Refreshments',       color:'#D97706' },
+  { id:'equipment',     label:'Equipment & Tool Rental',   color:'#6B7280' },
+  { id:'utilities',     label:'Site Utilities (Power/Water)', color:'#0891B2' },
+  // ── Protection ──
+  { id:'insurance',     label:'Insurance',                 color:'#059669' },
+  { id:'security',      label:'Security (CCTV/Locks)',     color:'#374151' },
+  // ── Admin & Legal ──
+  { id:'legal',         label:'Legal & Documentation',     color:'#7C3AED' },
+  { id:'taxes',         label:'Taxes & Government Fees',   color:'#B45309' },
+  // ── Safety Net ──
+  { id:'contingency',   label:'Contingency / Emergency',   color:'#DC2626' },
   { id:'misc',          label:'Miscellaneous',             color:'#78716C' },
 ];
 function catById(id) { return CATEGORIES.find(c => c.id === id) || CATEGORIES[CATEGORIES.length - 1]; }
