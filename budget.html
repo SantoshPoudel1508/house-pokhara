@@ -6,17 +6,55 @@
 <title>Budget Tracker | House Guide — Pokhara 30×60</title>
 <link rel="stylesheet" href="css/style.css"/>
 <style>
+  /* ── Full-screen walls ── */
+  .full-screen-wall {
+    position: fixed; inset: 0; z-index: 250;
+    display: flex; align-items: center; justify-content: center;
+    background: var(--bg); padding: 20px;
+  }
+  .wall-card {
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 20px; padding: 48px 40px; text-align: center;
+    max-width: 420px; width: 100%; box-shadow: var(--shadow-lg);
+  }
+  .wall-card .wall-icon { font-size: 56px; margin-bottom: 16px; display: block; }
+  .wall-card h2 { font-size: 22px; font-weight: 800; color: var(--text); margin-bottom: 8px; letter-spacing: -.03em; }
+  .wall-card h2::before { display: none; }
+  .wall-card p { font-size: 14px; color: var(--muted); margin-bottom: 24px; line-height: 1.6; }
+  .wall-card .wall-logo {
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+    font-size: 14px; font-weight: 700; color: var(--muted); margin-bottom: 28px;
+  }
+  .google-btn {
+    display: inline-flex; align-items: center; gap: 12px;
+    background: var(--card); color: var(--text); border: 1.5px solid var(--border);
+    padding: 13px 24px; border-radius: 10px; font-size: 14px; font-weight: 700;
+    cursor: pointer; transition: all .2s; box-shadow: var(--shadow-sm); width: 100%;
+    justify-content: center;
+  }
+  .google-btn:hover { border-color: var(--accent); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+  .google-btn .google-icon { font-size: 20px; }
+  .wall-card .privacy-note {
+    font-size: 11.5px; color: var(--muted-light); margin-top: 16px; line-height: 1.5;
+  }
+  /* Access denied card */
+  .denied-card { border-top: 4px solid var(--red); }
+  .denied-card .signout-link { font-size: 13px; color: var(--accent); cursor: pointer; font-weight: 600; background: none; border: none; margin-top: 10px; display: block; }
+  .denied-card .signout-link:hover { text-decoration: underline; }
+
+  /* ── Budget page content ── */
+  #budgetContent { display: none; }
+
   /* Cat filter buttons */
   .cat-filter-btn {
-    padding: 5px 13px; border-radius: 20px; font-size: 12px; font-weight: 600;
+    padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600;
     background: transparent; border: 1.5px solid; cursor: pointer;
     transition: all .15s; color: var(--muted); border-color: var(--border);
   }
-  .cat-filter-btn.active, .cat-filter-btn:hover { opacity: 1; }
-  .cat-filter-btn.active { filter: brightness(1); background: var(--accent); color: #fff !important; border-color: var(--accent) !important; }
+  .cat-filter-btn.active { background: var(--accent); color: #fff !important; border-color: var(--accent) !important; }
   #catFilters { display: flex; flex-wrap: wrap; gap: 7px; margin: 14px 0; }
   .section-head { font-size: 12px; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; color: var(--accent-dark); margin: 22px 0 10px; padding-bottom: 6px; border-bottom: 2px solid var(--accent-border); display: flex; align-items: center; justify-content: space-between; }
-  .empty-state { text-align: center; padding: 50px 20px; color: var(--muted); }
+  .empty-state { text-align: center; padding: 48px 20px; color: var(--muted); }
   .empty-state .es-icon { font-size: 48px; margin-bottom: 12px; }
   .empty-state h3 { font-size: 16px; font-weight: 700; color: var(--text-soft); margin-bottom: 6px; }
   .empty-state h3::before { display: none; }
@@ -24,11 +62,37 @@
 </head>
 <body data-page="budget">
 
-<!-- FIREBASE SDKs -->
+<!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
 
+<!-- ══ LOGIN WALL (shown by default) ══════════════════════ -->
+<div class="full-screen-wall" id="loginWall">
+  <div class="wall-card">
+    <span class="wall-icon">🏡</span>
+    <div class="wall-logo">House Guide — Pokhara</div>
+    <h2>Budget Tracker</h2>
+    <p>This page is private. Only authorised family members can view the construction budget. Please sign in with your Google account to continue.</p>
+    <button class="google-btn" onclick="signInGoogle()">
+      <span class="google-icon">🔐</span>
+      Sign in with Google
+    </button>
+    <p class="privacy-note">Only specific Google accounts are allowed access. If your account is not authorised, access will be denied.</p>
+  </div>
+</div>
+
+<!-- ══ ACCESS DENIED (shown for wrong email) ══════════════ -->
+<div class="full-screen-wall" id="accessDenied" style="display:none;">
+  <div class="wall-card denied-card">
+    <span class="wall-icon">🚫</span>
+    <h2>Access Denied</h2>
+    <p>Your Google account is not on the authorised list for this budget tracker. Please contact Santosh to request access.</p>
+    <button class="signout-link" onclick="signOut()">← Sign out and try a different account</button>
+  </div>
+</div>
+
+<!-- ══ TOP BAR ══════════════════════════════════════════════ -->
 <div class="topbar">
   <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
   <span class="site-name">🏡 <span class="hl">House Guide</span> — Pokhara</span>
@@ -42,6 +106,7 @@
 
 <div class="sidebar-overlay"></div>
 
+<!-- ══ SIDEBAR ══════════════════════════════════════════════ -->
 <div class="sidebar" id="sidebar">
   <div class="nav-section">Overview</div>
   <a href="index.html"><span class="nav-icon">🏡</span><span class="nav-label">Home</span><span class="nav-check"></span></a>
@@ -69,37 +134,29 @@
   <a href="budget.html" class="active"><span class="nav-icon">💰</span><span class="nav-label">Budget Tracker</span><span class="nav-check"></span></a>
 </div>
 
-<main class="main" id="budgetMain">
+<!-- ══ BUDGET CONTENT (hidden until login) ════════════════ -->
+<main class="main" id="budgetContent">
   <div class="page-header">
-    <div class="phase-tag">💰 Budget Tracker</div>
+    <div class="phase-tag">💰 Private</div>
     <h1>House Budget &amp; Expense Tracker</h1>
-    <div class="subtitle">Track all construction expenses in INR or NPR. Data is stored in the cloud and visible to everyone, but only authorised people can add expenses.</div>
-    <div class="nav-btns">
-      <a class="nav-btn" href="index.html">← Home</a>
-    </div>
+    <div class="subtitle">Track all construction costs in NPR or INR. All data syncs in real time across all devices.</div>
   </div>
 
-  <!-- HERO WITH AUTH + CURRENCY -->
-  <div class="budget-hero">
-    <div class="bh-info">
-      <h2>💰 Construction Budget</h2>
-      <p>All amounts sync instantly across all devices. Sign in with Google to add expenses.</p>
-      <div style="margin-top:10px;font-size:12px;opacity:.6;" id="rateDisplay">1 INR = 1.60 NPR</div>
-    </div>
-    <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;">
-      <div id="authArea"><!-- Rendered by JS --></div>
-      <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;">
-        <div class="currency-toggle">
-          <button data-cur="NPR" onclick="setCurrency('NPR')" class="active">NPR</button>
-          <button data-cur="INR" onclick="setCurrency('INR')">INR</button>
-        </div>
-        <button id="setBudgetBtn" class="login-btn" onclick="openBudgetModal()" style="display:none;">⚙ Set Budget</button>
-        <button id="addExpenseBtn" class="add-expense-btn" onclick="openModal()" style="display:none;">+ Add Expense</button>
+  <!-- User bar + controls -->
+  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px;">
+    <div id="userBar"></div>
+    <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;">
+      <div style="font-size:12px;color:var(--muted);" id="rateDisplay">1 INR = 1.60 NPR</div>
+      <div class="currency-toggle">
+        <button data-cur="NPR" onclick="setCurrency('NPR')" class="active">NPR</button>
+        <button data-cur="INR" onclick="setCurrency('INR')">INR</button>
       </div>
+      <button class="login-btn" onclick="openBudgetModal()" style="font-size:12.5px;padding:8px 14px;">⚙ Set Budget</button>
+      <button class="add-expense-btn" onclick="openModal()">+ Add Expense</button>
     </div>
   </div>
 
-  <!-- STATS -->
+  <!-- Stats row -->
   <div class="budget-stats">
     <div class="bstat">
       <div class="bstat-label">Total Budget</div>
@@ -117,44 +174,37 @@
     <div class="bstat good-stat">
       <div class="bstat-label">Remaining</div>
       <div class="bstat-value" id="statRemaining">—</div>
-      <div class="bstat-sub">Budget left to spend</div>
+      <div class="bstat-sub">Budget left</div>
     </div>
     <div class="bstat">
       <div class="bstat-label">Budget Used</div>
       <div class="bstat-value" id="statPct">—</div>
-      <div class="bstat-sub">Percentage of total budget</div>
+      <div class="bstat-sub">Percentage spent</div>
     </div>
   </div>
 
-  <!-- CATEGORY FILTERS -->
-  <div class="section-head">
-    <span>Filter by Category</span>
-  </div>
+  <!-- Category filters -->
+  <div class="section-head"><span>Filter by Category</span></div>
   <div id="catFilters"></div>
 
-  <!-- EXPENSE LIST -->
-  <div class="section-head">
-    <span>All Expenses</span>
-  </div>
+  <!-- Expense list -->
+  <div class="section-head"><span>All Expenses</span></div>
   <div id="expenseList">
     <div class="empty-state">
       <div class="es-icon">💸</div>
-      <h3>No expenses recorded yet</h3>
-      <p>Sign in and click "Add Expense" to start tracking your construction costs.</p>
+      <h3>No expenses yet</h3>
+      <p>Click "+ Add Expense" to record your first construction cost.</p>
     </div>
   </div>
 
-  <!-- PHASE BREAKDOWN CHART -->
-  <div class="section-head" style="margin-top:30px;">
-    <span>Spending by Category</span>
-  </div>
+  <!-- Spending chart -->
+  <div class="section-head" style="margin-top:30px;"><span>Spending by Category</span></div>
   <div id="phaseChart" style="margin:14px 0;">
-    <p style="color:var(--muted);font-size:13.5px;">Chart will appear once expenses are added.</p>
+    <p style="color:var(--muted);font-size:13.5px;">Chart appears once expenses are added.</p>
   </div>
-
 </main>
 
-<!-- ═══ ADD EXPENSE MODAL ═══ -->
+<!-- ══ ADD EXPENSE MODAL ══════════════════════════════════ -->
 <div class="modal-bg" id="expenseModal">
   <div class="modal">
     <h3>➕ Add New Expense</h3>
@@ -167,7 +217,7 @@
         <div class="form-group">
           <label>Currency</label>
           <select id="expCurrency">
-            <option value="NPR">NPR — Nepalese Rupee</option>
+            <option value="NPR">NPR — Nepali Rupee</option>
             <option value="INR">INR — Indian Rupee (₹)</option>
           </select>
         </div>
@@ -195,7 +245,7 @@
       </div>
       <div class="form-group">
         <label>Description</label>
-        <input type="text" id="expDesc" placeholder="e.g. TMT Steel bars 10mm — 200kg" required/>
+        <input type="text" id="expDesc" placeholder="e.g. TMT Steel bars 10mm — 200 kg" required/>
       </div>
       <div class="form-group">
         <label>Date</label>
@@ -209,7 +259,7 @@
   </div>
 </div>
 
-<!-- ═══ SET BUDGET MODAL ═══ -->
+<!-- ══ SET BUDGET MODAL ═══════════════════════════════════ -->
 <div class="modal-bg" id="budgetModal">
   <div class="modal">
     <h3>⚙️ Set Total Budget</h3>
@@ -228,9 +278,9 @@
         </div>
       </div>
       <div class="form-group">
-        <label>Conversion Rate (1 INR = ? NPR)</label>
+        <label>Conversion Rate — 1 INR = how many NPR?</label>
         <input type="number" id="convRate" placeholder="1.60" step="0.01" min="0.1"/>
-        <div style="font-size:12px;color:var(--muted);margin-top:4px;">Current approximate rate: 1 INR ≈ 1.60 NPR. Update if the rate has changed.</div>
+        <div style="font-size:12px;color:var(--muted);margin-top:4px;">Approximate current rate: 1 INR ≈ 1.60 NPR</div>
       </div>
       <div class="modal-actions">
         <button type="submit" class="btn-primary">💾 Save Budget</button>
