@@ -54,6 +54,13 @@ function injectBudgetLink() {
   // Add divider + budget link
   const div = document.createElement('div');
   div.className = 'divider';
+  // Docs link
+  const docsA = document.createElement('a');
+  docsA.href = 'docs.html';
+  if (window.location.pathname.endsWith('docs.html')) docsA.classList.add('active');
+  docsA.innerHTML = `<span class="nav-icon">📁</span><span class="nav-label">Documents</span><span class="nav-check"></span>`;
+  last.after(docsA);
+
   const a = document.createElement('a');
   a.href = 'budget.html';
   if (window.location.pathname.endsWith('budget.html')) a.classList.add('active');

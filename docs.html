@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🏡</text></svg>"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Documents | House Guide — Pokhara 30×60</title>
+<link rel="stylesheet" href="css/style.css"/>
+<style>
+  /* Login wall */
+  .full-screen-wall { position:fixed;inset:0;z-index:250;display:flex;align-items:center;justify-content:center;background:var(--bg);padding:20px; }
+  .wall-card { background:var(--card);border:1px solid var(--border);border-radius:20px;padding:48px 40px;text-align:center;max-width:420px;width:100%;box-shadow:var(--shadow-lg); }
+  .wall-card .wall-icon { font-size:56px;margin-bottom:16px;display:block; }
+  .wall-card h2 { font-size:22px;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-.03em; }
+  .wall-card h2::before { display:none; }
+  .wall-card p { font-size:14px;color:var(--muted);margin-bottom:24px;line-height:1.6; }
+  .google-btn { display:inline-flex;align-items:center;gap:12px;background:var(--card);color:var(--text);border:1.5px solid var(--border);padding:13px 24px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;transition:all .2s;box-shadow:var(--shadow-sm);width:100%;justify-content:center; }
+  .google-btn:hover { border-color:var(--accent);box-shadow:var(--shadow-md); }
+  .denied-card { border-top:4px solid var(--red); }
+  .denied-link { font-size:13px;color:var(--accent);cursor:pointer;font-weight:600;background:none;border:none;margin-top:10px;display:block; }
+
+  /* Doc page */
+  #docContent { display:none; }
+
+  /* Hero */
+  .doc-hero { background:var(--primary);color:#fff;border-radius:var(--radius-lg);padding:22px 26px;margin-bottom:16px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;position:relative;overflow:hidden; }
+  .doc-hero::before { content:'📁';position:absolute;right:16px;top:50%;transform:translateY(-50%);font-size:80px;opacity:.06; }
+  .doc-hero-info { flex:1;min-width:200px; }
+  .doc-hero h2 { font-size:20px;font-weight:800;color:#fff;margin-bottom:4px;letter-spacing:-.02em; }
+  .doc-hero h2::before { display:none; }
+  .doc-hero p { font-size:13px;color:rgba(255,255,255,.7);margin:0; }
+
+  /* Stats */
+  .doc-stats { display:flex;gap:12px;flex-wrap:wrap;margin:12px 0; }
+  .doc-stat { background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 18px;min-width:140px;box-shadow:var(--shadow-sm); }
+  .doc-stat .ds-label { font-size:10.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:4px; }
+  .doc-stat .ds-val { font-size:18px;font-weight:800;color:var(--text); }
+
+  /* Category filters */
+  .doc-cat-btn { padding:6px 13px;border-radius:20px;font-size:12px;font-weight:600;background:transparent;border:1.5px solid var(--border);color:var(--muted);cursor:pointer;transition:all .15s; }
+  .doc-cat-btn.active { background:var(--accent);color:#fff !important;border-color:var(--accent) !important; }
+  .doc-cat-btn:hover { opacity:1; }
+  #docCatFilters { display:flex;flex-wrap:wrap;gap:7px;margin:12px 0; }
+
+  /* Document cards */
+  #docList { margin-top:8px; }
+  .doc-card { background:var(--card);border:1px solid var(--border);border-radius:12px;margin:10px 0;overflow:hidden;box-shadow:var(--shadow-sm);transition:box-shadow .2s; }
+  .doc-card:hover { box-shadow:var(--shadow-md); }
+  .doc-card-top { display:flex;align-items:center;gap:14px;padding:14px 18px; }
+  .doc-icon { font-size:28px;flex-shrink:0; }
+  .doc-info { flex:1;min-width:0; }
+  .doc-name { font-weight:700;font-size:14px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis; }
+  .doc-meta { display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-top:4px; }
+  .doc-actions { display:flex;gap:4px;align-items:center;flex-shrink:0; }
+  .doc-actions button, .doc-actions a { background:none;border:none;cursor:pointer;width:32px;height:32px;border-radius:8px;font-size:16px;display:flex;align-items:center;justify-content:center;opacity:.45;transition:all .18s;text-decoration:none; }
+  .doc-actions button:hover, .doc-actions a:hover { opacity:1;transform:scale(1.15); }
+  .doc-actions .btn-edit:hover   { background:var(--accent-light); }
+  .doc-actions .btn-delete:hover { color:var(--red); }
+
+  /* Empty state */
+  .doc-empty { text-align:center;padding:60px 20px;color:var(--muted); }
+  .doc-empty p { font-size:14px;margin:6px 0; }
+
+  /* Upload modal */
+  .modal-bg { position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:300;display:none;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px); }
+  .modal-bg.open { display:flex; }
+  .modal { background:var(--card);border-radius:var(--radius-lg);padding:28px;width:100%;max-width:480px;box-shadow:var(--shadow-lg);animation:slideUp .2s ease; }
+  @keyframes slideUp { from{transform:translateY(20px);opacity:0}to{transform:translateY(0);opacity:1} }
+  .modal h3 { font-size:18px;font-weight:800;color:var(--text);margin-bottom:20px;letter-spacing:-.02em; }
+  .modal h3::before { display:none; }
+  .form-group { margin-bottom:16px; }
+  .form-group label { display:block;font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);margin-bottom:6px; }
+  .form-group input, .form-group select, .form-group textarea { width:100%;border:1.5px solid var(--border);border-radius:8px;padding:10px 13px;font-size:14px;font-family:inherit;background:var(--bg-alt);color:var(--text);transition:border-color .15s; }
+  .form-group input:focus, .form-group select:focus { outline:none;border-color:var(--accent); }
+  .form-group input[type=file] { padding:8px; }
+  .modal-actions { display:flex;gap:10px;margin-top:20px; }
+  .btn-primary { background:var(--accent);color:#fff;border:none;padding:11px 22px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;flex:1;transition:background .15s; }
+  .btn-primary:hover { background:var(--accent-dark); }
+  .btn-secondary { background:var(--bg-alt);color:var(--text-soft);border:1.5px solid var(--border);padding:11px 18px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;transition:all .15s; }
+
+  /* Upload progress bar */
+  #uploadProgress { margin-top:12px;display:none; }
+  .prog-track { background:var(--border);border-radius:20px;height:8px;overflow:hidden; }
+  .prog-fill { background:var(--progress-fill);height:8px;border-radius:20px;transition:width .3s; }
+
+  /* Preview modal */
+  .preview-modal { background:var(--card);border-radius:var(--radius-lg);padding:24px;width:100%;max-width:860px;max-height:92vh;overflow-y:auto;box-shadow:var(--shadow-lg); }
+  .preview-header { display:flex;justify-content:space-between;align-items:center;margin-bottom:16px; }
+  .preview-header h3 { font-size:15px;font-weight:700;color:var(--text);max-width:80%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap; }
+  .preview-header h3::before { display:none; }
+  .close-btn { background:var(--bg-alt);border:1px solid var(--border);border-radius:8px;padding:6px 12px;font-size:14px;cursor:pointer;color:var(--text-soft); }
+
+  /* Upload button */
+  .upload-fab { background:var(--accent);color:#fff;border:none;padding:11px 22px;border-radius:10px;font-size:14px;font-weight:700;cursor:pointer;display:inline-flex;align-items:center;gap:8px;transition:background .15s;box-shadow:var(--shadow-sm); }
+  .upload-fab:hover { background:var(--accent-dark); }
+
+  @media(max-width:600px){ .doc-card-top{flex-wrap:wrap;} .preview-modal{padding:16px;} }
+</style>
+</head>
+<body data-page="docs">
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-firestore-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.22.2/firebase-storage-compat.js"></script>
+
+<!-- ══ LOGIN WALL ══════════════════════════════════════════ -->
+<div class="full-screen-wall" id="docLoginWall">
+  <div class="wall-card">
+    <span class="wall-icon">🔐</span>
+    <h2>Documents — Private</h2>
+    <p>All house documents are private. Only authorised members can access this section. Please sign in with your Google account.</p>
+    <button class="google-btn" onclick="docSignIn()">🔐 Sign in with Google</button>
+  </div>
+</div>
+
+<!-- ══ ACCESS DENIED ══════════════════════════════════════ -->
+<div class="full-screen-wall" id="docDenied" style="display:none;">
+  <div class="wall-card denied-card">
+    <span class="wall-icon">🚫</span>
+    <h2>Access Denied</h2>
+    <p>Your Google account is not authorised to view these documents. Contact Santosh for access.</p>
+    <button class="denied-link" onclick="docSignOut()">← Sign out and try a different account</button>
+  </div>
+</div>
+
+<!-- ══ TOP BAR ══════════════════════════════════════════════ -->
+<div class="topbar">
+  <button class="hamburger" onclick="toggleSidebar()">&#9776;</button>
+  <span class="site-name">🏡 <span class="hl">House Guide</span> — Pokhara</span>
+  <div class="progress-wrap">
+    <div class="bar-bg"><div class="bar-fill" id="progressBar" style="width:0%"></div></div>
+    <span class="bar-text" id="progressText">0 of 0</span>
+  </div>
+  <button class="print-btn" onclick="window.print()">🖨 Print</button>
+  <button class="reset-btn" onclick="resetAll()">↺ Reset</button>
+</div>
+
+<div class="sidebar-overlay"></div>
+
+<!-- ══ SIDEBAR ══════════════════════════════════════════════ -->
+<div class="sidebar" id="sidebar">
+  <div class="nav-section">Overview</div>
+  <a href="index.html"><span class="nav-icon">🏡</span><span class="nav-label">Home</span><span class="nav-check"></span></a>
+  <div class="divider"></div>
+  <div class="nav-section">Construction Phases</div>
+  <a href="phase-0.html" data-page="phase-0"><span class="nav-icon">📋</span><span class="nav-label">Phase 0 — Planning</span><span class="nav-check"></span></a>
+  <a href="phase-1.html" data-page="phase-1"><span class="nav-icon">🏗️</span><span class="nav-label">Phase 1 — Foundation</span><span class="nav-check"></span></a>
+  <a href="phase-2.html" data-page="phase-2"><span class="nav-icon">🧱</span><span class="nav-label">Phase 2 — Structure</span><span class="nav-check"></span></a>
+  <a href="phase-5.html" data-page="phase-5"><span class="nav-icon">🛡️</span><span class="nav-label">Phase 3 — Waterproofing</span><span class="nav-check"></span></a>
+  <a href="phase-3.html" data-page="phase-3"><span class="nav-icon">💧</span><span class="nav-label">Phase 4 — Plumbing</span><span class="nav-check"></span></a>
+  <a href="phase-4.html" data-page="phase-4"><span class="nav-icon">⚡</span><span class="nav-label">Phase 5 — Electrical</span><span class="nav-check"></span></a>
+  <a href="phase-6.html" data-page="phase-6"><span class="nav-icon">🪟</span><span class="nav-label">Phase 6 — Windows &amp; Doors</span><span class="nav-check"></span></a>
+  <a href="phase-7.html" data-page="phase-7"><span class="nav-icon">🔲</span><span class="nav-label">Phase 7 — Flooring</span><span class="nav-check"></span></a>
+  <a href="phase-8.html" data-page="phase-8"><span class="nav-icon">🎨</span><span class="nav-label">Phase 8 — Paint</span><span class="nav-check"></span></a>
+  <a href="phase-9.html" data-page="phase-9"><span class="nav-icon">🍳</span><span class="nav-label">Phase 9 — Kitchen</span><span class="nav-check"></span></a>
+  <a href="phase-10.html" data-page="phase-10"><span class="nav-icon">🚿</span><span class="nav-label">Phase 10 — Bathrooms</span><span class="nav-check"></span></a>
+  <a href="phase-11.html" data-page="phase-11"><span class="nav-icon">🛋️</span><span class="nav-label">Phase 11 — Interiors</span><span class="nav-check"></span></a>
+  <a href="phase-12.html" data-page="phase-12"><span class="nav-icon">🌿</span><span class="nav-label">Phase 12 — Outdoor</span><span class="nav-check"></span></a>
+  <div class="divider"></div>
+  <div class="nav-section">Reference</div>
+  <a href="scams.html"     data-page="scams"    ><span class="nav-icon">🚫</span><span class="nav-label">Scam Guard</span><span class="nav-check"></span></a>
+  <a href="questions.html" data-page="questions"><span class="nav-icon">❓</span><span class="nav-label">Questions Guide</span><span class="nav-check"></span></a>
+  <a href="briefs.html"                         ><span class="nav-icon">📄</span><span class="nav-label">Professional Briefs</span><span class="nav-check"></span></a>
+  <div class="divider"></div>
+  <a href="budget.html"><span class="nav-icon">💰</span><span class="nav-label">Budget Tracker</span><span class="nav-check"></span></a>
+  <a href="docs.html" class="active"><span class="nav-icon">📁</span><span class="nav-label">Documents</span><span class="nav-check"></span></a>
+</div>
+
+<!-- ══ DOCUMENT CONTENT ════════════════════════════════════ -->
+<main class="main" id="docContent">
+  <div class="page-header">
+    <div class="phase-tag">📁 Private</div>
+    <h1>House Documents</h1>
+    <div class="subtitle">Land papers, legal documents, bills, contracts — all in one secure place. Only authorised members can view or upload.</div>
+    <div class="nav-btns"><a class="nav-btn" href="index.html">← Home</a></div>
+  </div>
+
+  <!-- Hero -->
+  <div class="doc-hero">
+    <div class="doc-hero-info">
+      <h2>📁 Document Vault</h2>
+      <p>Upload and store all important house and land documents. Preview PDFs and images directly in the browser.</p>
+    </div>
+    <div style="display:flex;flex-direction:column;gap:10px;align-items:flex-end;">
+      <div id="docUserBar"></div>
+      <button class="upload-fab" onclick="openUploadModal()">📤 Upload Document</button>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="doc-stats">
+    <div class="doc-stat"><div class="ds-label">Total Files</div><div class="ds-val" id="docTotal">0 documents</div></div>
+    <div class="doc-stat"><div class="ds-label">Total Size</div><div class="ds-val" id="docSize">0 B</div></div>
+  </div>
+
+  <!-- Category filters -->
+  <div class="section-head">
+    <span>Filter by Type</span>
+  </div>
+  <div id="docCatFilters"></div>
+
+  <!-- Document list -->
+  <div class="section-head" style="margin-top:20px;">
+    <span>All Documents</span>
+    <span id="docCount" style="font-size:11px;font-weight:600;color:var(--muted);"></span>
+  </div>
+  <div id="docList">
+    <div class="doc-empty">
+      <div>📂</div>
+      <p>No documents uploaded yet.</p>
+      <p style="font-size:12px;color:var(--muted);margin-top:4px;">Click "Upload Document" to add your first file.</p>
+    </div>
+  </div>
+</main>
+
+<!-- ══ UPLOAD MODAL ════════════════════════════════════════ -->
+<div class="modal-bg" id="uploadModal">
+  <div class="modal">
+    <h3>📤 Upload Document</h3>
+    <form id="uploadForm">
+      <div class="form-group">
+        <label>Select File</label>
+        <input type="file" id="docFile" accept=".pdf,.doc,.docx,.xls,.xlsx,.jpg,.jpeg,.png,.heic,.webp,.zip,.rar" required/>
+        <div style="font-size:11px;color:var(--muted);margin-top:4px;">PDF, Word, Excel, Images, ZIP — max 10 MB recommended</div>
+      </div>
+      <div class="form-group">
+        <label>Category</label>
+        <select id="docCategory" required>
+          <option value="">Select category...</option>
+          <option value="land">Land &amp; Property Documents</option>
+          <option value="legal">Legal Documents</option>
+          <option value="municipal">Municipal &amp; Government</option>
+          <option value="construction">Construction &amp; Design</option>
+          <option value="bills">Bills &amp; Receipts</option>
+          <option value="insurance">Insurance</option>
+          <option value="contracts">Contracts &amp; Agreements</option>
+          <option value="other">Other</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Description (optional)</label>
+        <input type="text" id="docDesc" placeholder="e.g. Lal Purja — Plot 135, dated 2024"/>
+      </div>
+      <!-- Upload progress -->
+      <div id="uploadProgress">
+        <div style="display:flex;justify-content:space-between;margin-bottom:5px;">
+          <span style="font-size:12px;color:var(--muted);">Uploading...</span>
+          <span style="font-size:12px;font-weight:700;color:var(--accent);" id="uploadPct"></span>
+        </div>
+        <div class="prog-track"><div class="prog-fill" id="uploadBar" style="width:0%"></div></div>
+      </div>
+      <div class="modal-actions">
+        <button type="submit" class="btn-primary">📤 Upload Document</button>
+        <button type="button" class="btn-secondary" onclick="closeUploadModal()">Cancel</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ══ PREVIEW MODAL ═══════════════════════════════════════ -->
+<div class="modal-bg" id="previewModal">
+  <div class="preview-modal">
+    <div class="preview-header">
+      <h3 id="previewTitle">Document Preview</h3>
+      <button class="close-btn" onclick="closePreview()">✕ Close</button>
+    </div>
+    <div id="previewBody"></div>
+  </div>
+</div>
+
+<script src="js/firebase-config.js"></script>
+<script src="js/app.js"></script>
+<script src="js/docs.js"></script>
+</body>
+</html>
