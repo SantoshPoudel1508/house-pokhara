@@ -477,8 +477,9 @@ table:not(.brief-table) thead, table:not(.brief-table) tbody { display: table; w
 .currency-toggle button.active { background: var(--accent); color: #fff; }
 
 .expense-list { margin-top: 20px; }
-.expense-item { background: var(--card); border: 1px solid var(--border); border-radius: 10px; padding: 14px 18px; margin: 8px 0; display: flex; align-items: center; gap: 14px; box-shadow: var(--shadow-sm); transition: box-shadow .2s; }
-.expense-item:hover { box-shadow: var(--shadow-md); }
+.expense-item { display: flex; align-items: center; gap: 14px; padding: 14px 18px; border-bottom: 1px solid var(--border); transition: background .15s; }
+.expense-item:hover { background: var(--accent-light); }
+.expense-item:last-child { border-bottom: none; }
 .expense-cat-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
 .expense-info { flex: 1; min-width: 0; }
 .expense-desc { font-weight: 600; font-size: 14px; color: var(--text); }

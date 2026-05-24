@@ -348,7 +348,17 @@ function setFilter(cat) {
 }
 
 // ── Add expense modal ──────────────────────────────────────
-function openModal()  { document.getElementById('expenseModal').classList.add('open'); document.getElementById('expDate').value = new Date().toISOString().split('T')[0]; }
+function getNPTDate() {
+  // Nepal Standard Time = UTC + 5 hours 45 minutes
+  const now    = new Date();
+  const utcMs  = now.getTime() + now.getTimezoneOffset() * 60000;
+  const nptMs  = utcMs + (5 * 60 + 45) * 60000;
+  return new Date(nptMs).toISOString().split('T')[0];
+}
+function openModal()  {
+  document.getElementById('expenseModal').classList.add('open');
+  document.getElementById('expDate').value = getNPTDate();
+}
 function closeModal() { document.getElementById('expenseModal').classList.remove('open'); }
 
 // ── Set budget modal ───────────────────────────────────────
