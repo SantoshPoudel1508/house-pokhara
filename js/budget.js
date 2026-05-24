@@ -376,8 +376,13 @@ function openModal(expense) {
     if (title) title.textContent = '✏️ Edit Expense';
     if (btn)   btn.textContent   = '💾 Update Expense';
   } else {
-    document.getElementById('expenseForm').reset();
-    document.getElementById('expDate').value = getNPTDate();
+    // Clear each field individually — more reliable than form.reset()
+    // (form.reset() can interfere with the date value on some browsers)
+    document.getElementById('expAmount').value   = '';
+    document.getElementById('expCurrency').value = 'NPR';
+    document.getElementById('expCategory').value = '';
+    document.getElementById('expDesc').value     = '';
+    document.getElementById('expDate').value     = getNPTDate(); // ← set last
     if (title) title.textContent = '➕ Add New Expense';
     if (btn)   btn.textContent   = '💾 Save Expense';
   }
