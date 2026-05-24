@@ -372,7 +372,8 @@ function openModal(expense) {
     document.getElementById('expCurrency').value = expense.currency || 'NPR';
     document.getElementById('expCategory').value = expense.category || '';
     document.getElementById('expDesc').value     = expense.description || '';
-    document.getElementById('expDate').value     = expense.date || getNPTDate();
+    document.getElementById('expDate').value = expense.date || getNPTDate();
+    document.getElementById('expDate').max   = getNPTDate(); // no future dates
     if (title) title.textContent = '✏️ Edit Expense';
     if (btn)   btn.textContent   = '💾 Update Expense';
   } else {
@@ -382,7 +383,9 @@ function openModal(expense) {
     document.getElementById('expCurrency').value = 'NPR';
     document.getElementById('expCategory').value = '';
     document.getElementById('expDesc').value     = '';
-    document.getElementById('expDate').value     = getNPTDate(); // ← set last
+    const todayNPT = getNPTDate();
+    document.getElementById('expDate').value = todayNPT;
+    document.getElementById('expDate').max   = todayNPT; // ← no future dates
     if (title) title.textContent = '➕ Add New Expense';
     if (btn)   btn.textContent   = '💾 Save Expense';
   }

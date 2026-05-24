@@ -495,7 +495,7 @@ table:not(.brief-table) thead, table:not(.brief-table) tbody { display: table; w
 }
 .expense-actions button:hover { opacity: 1; transform: scale(1.18); }
 .expense-actions .btn-edit:hover   { background: var(--accent-light); }
-.expense-actions .btn-delete:hover { background: var(--red-light); }
+.expense-actions .btn-delete:hover { color: var(--red); }
 
 .add-expense-btn { background: var(--accent); color: #fff; border: none; padding: 12px 24px; border-radius: 10px; font-size: 14px; font-weight: 700; cursor: pointer; transition: background .15s; display: inline-flex; align-items: center; gap: 8px; }
 .add-expense-btn:hover { background: var(--accent-dark); }
