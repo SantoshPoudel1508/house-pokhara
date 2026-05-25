@@ -195,8 +195,8 @@ window.addEventListener('DOMContentLoaded', () => {
   restore();
   refreshProgress();
   refreshSidebarBadges();
-  // First section open
-  document.querySelector('.sec')?.classList.add('open');
+  // Open ALL sections by default so every section is visible without clicking
+  document.querySelectorAll('.sec').forEach(s => s.classList.add('open'));
   // Images
   loadConceptImages();
   // Home
