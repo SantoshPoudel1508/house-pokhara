@@ -48,7 +48,7 @@ function toggleSidebar() {
 // Inject budget link into sidebar dynamically
 function injectBudgetLink() {
   const sidebar = document.querySelector('.sidebar');
-  if (!sidebar || document.querySelector('.sidebar a[href="budget.html"]')) return;
+  if (!sidebar || sidebar.querySelector('a[href="budget.html"]') || sidebar.querySelector('a[href="docs.html"]')) return;
   const last = sidebar.querySelector('a:last-of-type');
   if (!last) return;
   // Add divider + budget link
